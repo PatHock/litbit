@@ -7,17 +7,15 @@
 #include <Arduino.h>
 
 int main(void) {
-  //Initialise Arduino functionality.
+  
+  //IMPORTANT - Init code below is necessary for board to function properly
   init();
-   
-  //Attach USB for applicable processors.
+  // Needed for ATMEGA32u4 processors
   #ifdef USBCON
     USBDevice.attach();
   #endif
 
-  // initialize the digital pin as an output.
-  // Pin 13 has an LED connected on most Arduino boards:
-  pinMode(13, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   while(true) {
     digitalWrite(13, HIGH);   // set the LED on
