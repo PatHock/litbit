@@ -1,0 +1,49 @@
+{
+    "description": "An Arduino library for interfacing with the SparkFun Triple Axis Accelerometer Breakout - ADXL345", 
+    "repository": {
+        "url": "https://github.com/sparkfun/SparkFun_ADXL345_Arduino_Library", 
+        "type": "git"
+    }, 
+    "platforms": [
+        "atmelavr", 
+        "atmelsam", 
+        "espressif32", 
+        "espressif8266", 
+        "intel_arc32", 
+        "microchippic32", 
+        "nordicnrf51", 
+        "nordicnrf52", 
+        "ststm32", 
+        "teensy", 
+        "timsp430"
+    ], 
+    "export": {
+        "exclude": [
+            "extras", 
+            "docs", 
+            "tests", 
+            "test", 
+            "*.doxyfile", 
+            "*.pdf"
+        ], 
+        "include": null
+    }, 
+    "authors": [
+        {
+            "maintainer": true, 
+            "name": "SparkFun Electronics", 
+            "url": null, 
+            "email": null
+        }
+    ], 
+    "keywords": [
+        "sensors"
+    ], 
+    "id": 2879, 
+    "name": "SparkFun ADXL345 Arduino Library", 
+    "frameworks": [
+        "arduino"
+    ], 
+    "version": "1.0.0", 
+    "homepage": null
+}
