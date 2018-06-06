@@ -10,6 +10,7 @@
 #define RTC_HPP
 
 #include <Arduino.h>
+#include <MCP7940.h>
 
 class Rtc 
 {
@@ -17,7 +18,11 @@ class Rtc
         Rtc(void);     // Constructor
         ~Rtc(void); // Destructor
 
+        DateTime getDateTime();
+        void setDateTime();
+
     private:
+        MCP7940_Class MCP7940;
 
 };
 

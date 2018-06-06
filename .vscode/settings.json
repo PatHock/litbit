@@ -1,6 +1,6 @@
 {
     "terminal.integrated.env.linux": {
-        "PATH": "/home/pat/.platformio/penv/bin:/home/pat/.platformio/penv:/home/pat/bin:/home/pat/.local/bin:/home/pat/.sdkman/candidates/java/current/bin:/home/pat/.sdkman/candidates/gradle/current/bin:/home/pat/bin:/home/pat/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/bin/idea-IU-181.4445.78/:/usr/bin/gcc-5/",
+        "PATH": "/home/pat/.platformio/penv/bin:/home/pat/.platformio/penv:/home/pat/bin:/home/pat/.local/bin:/home/pat/.sdkman/candidates/java/current/bin:/home/pat/.sdkman/candidates/gradle/current/bin:/home/pat/bin:/home/pat/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/bin/idea-IU-181.4445.78/:/usr/bin/gcc-5/:/home/pat/dev/flutter/bin/",
         "PLATFORMIO_CALLER": "vscode"
     },
     "terminal.integrated.env.windows": {

@@ -12,15 +12,28 @@
 #include <stdint.h>
 #include <Arduino.h>
 #include <SparkFun_ADXL345.h>
+#include "Model/Accel/Accel.hpp"
 
 class AccelController 
 {
     public:
-        AccelController(void);     // Constructor
-        ~AccelController(void); // Destructor
-        
-    private:
+        // Destructor
+        ~AccelController(void); 
 
+        // Returns the instance of EepromController
+        static AccelController* getInstance();
+
+        // Initializes, since constructor cannot be called (to enforce singletons)
+        void init(void);
+
+    private:
+        // Constructor
+        AccelController(void){};
+
+        // Pointer to the single instance of EepromController 
+        static AccelController* _pInstance;
+
+        Accel* AccelModel;
 
 };
 
