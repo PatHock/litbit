@@ -30,7 +30,7 @@ typedef struct
 } Accel;
 
 /**
- * Get your global variables here, folks.
+ * Get your global variables here, folks. :)
  */
 ADXL345 adxl;
 Accel currentReading;
@@ -53,6 +53,7 @@ void setupSPI() {}
 */
 void setupI2C()
 {
+    Wire.setClock(100000);
     Wire.begin();
 }
 
@@ -70,8 +71,8 @@ void setupADXL345()
     adxl.setActivityXYZ(0, 0, 1);        // Set to be activated from activity on X Y or Z axes
     adxl.setActivityThreshold(75);       // scaled 0-255, 255 is full scale of the range
 
-    // Turn on Interrupts for each mode (1 == ON, 0 == OFF)
-    adxl.ActivityINT(1);
+    // Turn on Interrupts for Activity
+    adxl.ActivityINT(ENABLE);
 }
 
 /**
@@ -107,6 +108,7 @@ void setupRTC()
 */
 void setupEEPROM()
 {
+    // Device address is 0x50
 }
 
 /**
@@ -121,7 +123,6 @@ void setupEEPROM()
 void readAcceleration(Accel *data)
 {
     adxl.readAccel(&data->x, &data->y, &data->z);
-
 }
 
 /**
@@ -140,7 +141,25 @@ void readDateTime(DateTime *data)
  * All writing is assumed to occur at EEPROM storage address 0x0.
  * Any existing data should be overwritten.
  */
-void writeDataToEEPROM(uint16_t *data, uint16_t len) {}
+void writeDataToEEPROM(uint8_t *data, uint8_t len)
+{
+    uint16_t dataAddress = 0x0;
+    uint16_t deviceAddress = 0x50;
+
+    Wire.beginTransmission((uint8_t)deviceAddress); // initiate transaction
+
+    Wire.write((uint8_t)(dataAddress >> 8));   // First half of 16 - bit address
+    Wire.write((uint8_t)(dataAddress & 0xFF)); // second half
+
+    for (int i = 0; i < len; i++)
+    {
+        // Per datasheet, successive write operations are sequential in memory
+        Wire.write((uint8_t)data[i]);
+    }
+
+    Wire.endTransmission(); // Nothing's wrong it's fine
+    delay(5);               // Allow time for write to occur - write should not be followed immediately by a read
+}
 
 /**
  * Function reads a sequence of uint16_t values from the EEPROM
@@ -148,7 +167,27 @@ void writeDataToEEPROM(uint16_t *data, uint16_t len) {}
  * specified by the len parameter. All reads are assumed to begin at EEPROM storage
  * address 0x0.
  */
-void readDataFromEEPROM(uint16_t *buffer, uint16_t len) {}
+void readDataFromEEPROM(uint8_t *buffer, uint16_t len)
+{
+    uint16_t dataAddress = 0x0;
+    uint16_t deviceAddress = 0x50;
+
+    Wire.beginTransmission((uint8_t)deviceAddress); // initiate transaction
+
+    Wire.write((uint8_t)(dataAddress >> 8));   // First half of 16 - bit address
+    Wire.write((uint8_t)(dataAddress & 0xFF)); // second half
+
+    Wire.endTransmission();
+
+    for (int i = 0; i < len; i++)
+    {
+        Wire.requestFrom((uint8_t)0x50, (uint8_t)1);
+        if (Wire.available())
+        {
+            buffer[i] = Wire.read();
+        }
+    }
+}
 
 /**
   * typical sample code for your milestone. Particular
@@ -162,7 +201,7 @@ void setup()
     {
         ;
     }
-    
+
     /*
    * Configure all buses
    */
@@ -170,18 +209,24 @@ void setup()
     setupSPI();
 
     /**
-  * Initialize the EEPROM
-  */
+     * Initialize the EEPROMnce of one bus line in pF.
+    2: As a transmitter, the device must provide an internal minimum delay time to bridge the undefined region (minimum
+    300 ns) of the falling edge of SCL to avoid unintended generation of Start or Stop conditions.
+    3: The combined TSP and VHYS specifications are due to new Schmitt Trigger inputs which provide improved noise spike
+    suppression. This eliminates the need for
+     */
     // setupEEPROM();
 
     /**
-   * Configure the ADXL345
+   * Configure the ADXL34nce of one bus line in pF.
+2: As a transmitter, the device must provide an internal minimum delay time to bridge the undefined region (minimum
+300 ns) of the falling edge of SCL to avoid unintended generation of Start or Stop conditions.
+3: The combined TSP and VHYS specifications are due to new Schmitt Trigger inputs which provide improved noise spike
+suppression. This eliminates the need for
    */
     setupADXL345();
 
     setupRTC();
-
-    
 }
 
 void loop()
@@ -192,61 +237,85 @@ void loop()
    */
     readAcceleration(&currentReading);
 
-    Serial.print(currentReading.x);
+    Serial.println("--------------------------------------------------");
+    Serial.print("Accelerometer X, Y, Z readings (in Gs): ");
+    Serial.print((float)(currentReading.x + 1)/256);
     Serial.print("\t");
-    Serial.print(currentReading.y);
+    Serial.print((float)(currentReading.y + 1)/256);
     Serial.print("\t");
-    Serial.println(currentReading.z);
+    Serial.println((float)(currentReading.z + 1)/256);
 
     /**
    * Test #2: Try to read out the time of day and
    * print out the results
    */
-       readDateTime(&currentDateTime);
-       Serial.print(currentDateTime.month());
-       Serial.print("/");
-       Serial.print(currentDateTime.day());
-       Serial.print("/");
-       Serial.print(currentDateTime.year());
-       Serial.print("\t");
-       Serial.print(currentDateTime.hour());
-       Serial.print(":");
-       Serial.print(currentDateTime.minute());
-       Serial.print(":");
-       Serial.println(currentDateTime.second());
+    readDateTime(&currentDateTime);
+    Serial.print(currentDateTime.month());
+    Serial.print("/");
+    Serial.print(currentDateTime.day());
+    Serial.print("/");
+    Serial.print(currentDateTime.year());
+    Serial.print("\t");
+    Serial.print(currentDateTime.hour());
+    Serial.print(":");
+    Serial.print(currentDateTime.minute());
+    Serial.print(":");
+    Serial.println(currentDateTime.second());
 
     /**
     * Test #3: Try to write and read back some
     * random data
     */
-    // uint16_t array[5];
-    // for(int i=0;i<5;i++)
-    // {
-    //   array[i]=random();
-    // }
-    // writeDataToEEPROM(array,5);
+    uint8_t array[5];
+    for (int i = 0; i < 5; i++)
+    {
+        array[i] = random();
+    }
 
-    // uint16_t buffer[5];
+    Serial.print("Written to EEPROM: \t");
+    Serial.print(array[0]);
+    Serial.print("\t");
+    Serial.print(array[1]);
+    Serial.print("\t");
+    Serial.print(array[2]);
+    Serial.print("\t");
+    Serial.print(array[3]);
+    Serial.print("\t");
+    Serial.println(array[4]);
 
-    // readDataFromEEPROM(buffer,5);
+    writeDataToEEPROM(array, 5);
+    uint8_t buffer[5];
 
-    // bool testPass = true;
-    // for(int i=0;i<5;i++)
-    // {
-    // 	if(buffer[i]!=array[i])
-    // 	{
-    // 		testPass=false;
-    // 	}
-    // }
+    readDataFromEEPROM(buffer, 5);
 
-    // if(testPass)
-    // {
-    // 	Serial.println("EEPROM Test Passed.");
-    // }
-    // else
-    // {
-    // 	Serial.println("EEPROM Test Failed.");
-    // }
+    Serial.print("Read from EEPROM: \t");
+    Serial.print(buffer[0]);
+    Serial.print("\t");
+    Serial.print(buffer[1]);
+    Serial.print("\t");
+    Serial.print(buffer[2]);
+    Serial.print("\t");
+    Serial.print(buffer[3]);
+    Serial.print("\t");
+    Serial.println(buffer[4]);
+
+    bool testPass = true;
+    for (int i = 0; i < 5; i++)
+    {
+        if (buffer[i] != array[i])
+        {
+            testPass = false;
+        }
+    }
+
+    if (testPass)
+    {
+        Serial.println("EEPROM Test Passed.");
+    }
+    else
+    {
+        Serial.println("EEPROM Test Failed.");
+    }
 
     delay(1000);
 }
