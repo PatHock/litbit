@@ -11,15 +11,34 @@
 #include <avr/sleep.h>
 #include <avr/power.h>
 
-#include <SparkFun_ADXL345.h>
-#include <MCP7940.h>
 
+// ADXL header
+#include <SparkFun_ADXL345.h>
 #define ADXL_RANGE_2G 2
 #define ADXL_RANGE_4G 4
 #define ADXL_RANGE_8G 8
 #define ADXL_RANGE_16G 16
 #define ENABLE 1
 #define DISABLE 0
+
+// RTC header
+#include <MCP7940.h>
+#define MONTH_JAN 1
+#define MONTH_FEB 2
+#define MONTH_MAR 3
+#define MONTH_APR 4
+#define MONTH_MAY 5
+#define MONTH_JUN 6
+#define MONTH_JLY 7
+#define MONTH_AUG 8
+#define MONTH_SEP 9
+#define MONTH_OCT 10
+#define MONTH_NOV 11
+#define MONTH_DEC 12
+
+
+// I2C header
+#define I2C_FREQ 100000
 
 /*
  * Required Data structures for Demo. May be replaced at a later date
@@ -34,8 +53,9 @@ typedef struct
  */
 ADXL345 adxl;
 Accel currentReading;
-DateTime currentDateTime;
+DateTime currentDateTime = DateTime(2018, MONTH_JUN, 6, 14, 15, 0);
 MCP7940_Class rtc;
+
 
 /**
  * Setup and Initialization functions
@@ -53,7 +73,7 @@ void setupSPI() {}
 */
 void setupI2C()
 {
-    Wire.setClock(100000);
+    Wire.setClock(I2C_FREQ);  // set I2C clock freq
     Wire.begin();
 }
 
@@ -97,7 +117,10 @@ void setupRTC()
             Serial.println(F("Oscillator did not start."));
     }
 
-    rtc.adjust();
+    // Use argument DateTime to manually set time, or 
+    // leave blank to set time to the time when the program
+    // was compiled
+    rtc.adjust(currentDateTime);    
 
     Serial.println(F("MCP7940N initialized."));
 }
@@ -215,7 +238,7 @@ void setup()
     3: The combined TSP and VHYS specifications are due to new Schmitt Trigger inputs which provide improved noise spike
     suppression. This eliminates the need for
      */
-    // setupEEPROM();
+    setupEEPROM();
 
     /**
    * Configure the ADXL34nce of one bus line in pF.
@@ -272,6 +295,9 @@ void loop()
         array[i] = random();
     }
 
+    writeDataToEEPROM(array, 5);
+    uint8_t buffer[5];
+
     Serial.print("Written to EEPROM: \t");
     Serial.print(array[0]);
     Serial.print("\t");
@@ -282,9 +308,6 @@ void loop()
     Serial.print(array[3]);
     Serial.print("\t");
     Serial.println(array[4]);
-
-    writeDataToEEPROM(array, 5);
-    uint8_t buffer[5];
 
     readDataFromEEPROM(buffer, 5);
 
