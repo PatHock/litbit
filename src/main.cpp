@@ -53,7 +53,7 @@ typedef struct
  */
 ADXL345 adxl;
 Accel currentReading;
-DateTime currentDateTime = DateTime(2018, MONTH_JUN, 6, 14, 15, 0);
+DateTime currentDateTime = DateTime(2018, MONTH_JUN, 6, 14, 25, 0);
 MCP7940_Class rtc;
 
 
