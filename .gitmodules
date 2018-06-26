@@ -1,0 +1,3 @@
+[submodule "arduino-BLEPeripheral"]
+	path = lib/arduino-BLEPeripheral
+	url = https://github.com/PatHock/arduino-BLEPeripheral.git
