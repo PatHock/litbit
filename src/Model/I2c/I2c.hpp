@@ -9,12 +9,16 @@
 #define I2C_HPP
 
 #include <Arduino.h>
+#include <Wire.h>
+
+#define I2C_FREQ 100000
 
 class I2c
 {
     public:
         ~I2c(void); // Destructor
         I2c(void);     // Constructor
+        
     
     private:
         

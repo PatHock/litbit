@@ -9,7 +9,17 @@
 #ifndef BLE_HPP
 #define BLE_HPP
 
+#include <Arduino.h>
 #include <BLEPeripheral.h>
 
+class Ble
+{
+    public:
+        Ble(void);     // Constructor
+        ~Ble(void); // Destructor
+        
+    private:
 
+
+};
 #endif // BLE_HPP

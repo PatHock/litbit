@@ -12,6 +12,19 @@
 #include <Arduino.h>
 #include <MCP7940.h>
 
+#define MONTH_JAN 1
+#define MONTH_FEB 2
+#define MONTH_MAR 3
+#define MONTH_APR 4
+#define MONTH_MAY 5
+#define MONTH_JUN 6
+#define MONTH_JLY 7
+#define MONTH_AUG 8
+#define MONTH_SEP 9
+#define MONTH_OCT 10
+#define MONTH_NOV 11
+#define MONTH_DEC 12
+
 class Rtc 
 {
     public:

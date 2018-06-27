@@ -24,6 +24,8 @@ I2cController::~I2cController(void)
 void I2cController::init(void)
 {
     I2cModel = new I2c();
+    Wire.setClock(I2C_FREQ);
+    Wire.begin();
 }
 
 /**

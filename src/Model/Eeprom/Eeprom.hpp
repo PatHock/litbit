@@ -19,6 +19,7 @@ class Eeprom
     
     private:
 
+
 };
 
 #endif  // EEPROM_HPP

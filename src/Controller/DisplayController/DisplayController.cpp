@@ -8,18 +8,32 @@
 
 #include "DisplayController.hpp"
 
-/**
- * Constructor
- */
-DisplayController::DisplayController(void) 
-{
-
-}
+DisplayController* DisplayController::_pInstance = NULL;
 
 /**
  * Deconstructor
  */
 DisplayController::~DisplayController(void)
 {
-    
+    delete DisplayModel;   
+}
+/**
+ * Initialization
+ */
+void DisplayController::init(void)
+{
+    DisplayModel = new Display();
+}
+
+/**
+ * Singleton Manager
+ */
+DisplayController* DisplayController::getInstance()
+{
+    if(!_pInstance) 
+    {
+        _pInstance = new DisplayController();
+    }
+
+    return _pInstance;
 }

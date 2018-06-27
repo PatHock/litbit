@@ -13,6 +13,8 @@
 #include "Controller/EepromController/EepromController.hpp"
 #include "Controller/RtcController/RtcController.hpp"
 #include "Controller/AccelController/AccelController.hpp"
+#include "BleController/BleController.hpp"
+#include "DisplayController/DisplayController.hpp"
 
 
 #endif  //CONTROLLER_HPP
