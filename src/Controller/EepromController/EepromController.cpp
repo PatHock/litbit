@@ -8,18 +8,34 @@
 
 #include "EepromController.hpp"
 
-/**
- * Constructor
- */
-EepromController::EepromController(void) 
-{
-    
-}
+EepromController* EepromController::_pInstance = NULL;
+
 
 /**
  * Deconstructor
  */
-EepromController::~EepromController(void)
+EepromController::~EepromController(void) 
 {
-    
+    delete EepromModel;
+}
+
+/**
+ * Initialization
+ */
+void EepromController::init(void)
+{
+    EepromModel = new Eeprom();
+}
+
+/**
+ * Singleton Manager
+ */
+EepromController* EepromController::getInstance()
+{
+    if(!_pInstance) 
+    {
+        _pInstance = new EepromController();
+    }
+
+    return _pInstance;
 }

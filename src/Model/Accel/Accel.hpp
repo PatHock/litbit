@@ -28,6 +28,8 @@ class Accel
         uint16_t x, y, z;
         } Acceleration;
 
+        ADXL345 adxl;
+
 };
 
 #endif  // ACCEL_HPP

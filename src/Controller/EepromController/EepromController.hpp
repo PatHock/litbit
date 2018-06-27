@@ -10,14 +10,28 @@
 #define EEPROMCONTROLLER_HPP
 
 #include <Arduino.h>
+#include "Model/Eeprom/Eeprom.hpp"
 
 class EepromController
 {
     public:
-        EepromController(void);     // Constructor
-        ~EepromController(void); // Destructor
+        // Destructor
+        ~EepromController(void); 
+
+        // Returns the instance of EepromController
+        static EepromController* getInstance();
+
+        // Initializes, since constructor cannot be called (to enforce singletons)
+        void init(void);
     
     private:
+        // Constructor
+        EepromController(void){};
+
+        // Pointer to the single instance of EepromController 
+        static EepromController* _pInstance;
+
+        Eeprom* EepromModel;
 
 };
 

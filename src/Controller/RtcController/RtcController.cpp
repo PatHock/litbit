@@ -8,18 +8,33 @@
 
 #include "RtcController.hpp"
 
-/**
- * Constructor
- */
-RtcController::RtcController(void)
-{
-
-}
+RtcController* RtcController::_pInstance = NULL;
 
 /**
  * Deconstructor
  */
-RtcController::~RtcController(void) 
+RtcController::~RtcController(void)
 {
+    delete RtcModel;
+}
 
+/**
+ * Initialization
+ */
+void RtcController::init(void)
+{
+    RtcModel = new Rtc();
+}
+
+/**
+ * Singleton Manager
+ */
+RtcController* RtcController::getInstance()
+{
+        if(!_pInstance) 
+    {
+        _pInstance = new RtcController();
+    }
+
+    return _pInstance;
 }
