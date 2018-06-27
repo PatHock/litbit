@@ -10,6 +10,8 @@
 #define DISPLAY_HPP
 
 #include <Arduino.h>
+#include <SFE_MicroOLED.h>  // Include the SFE_MicroOLED library
+#include <Wire.h>
 
 class Display
 {

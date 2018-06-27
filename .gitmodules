@@ -1,3 +1,6 @@
 [submodule "lib/arduino-BLEPeripheral"]
 	path = lib/arduino-BLEPeripheral
 	url = https://github.com/PatHock/arduino-BLEPeripheral.git
+[submodule "lib/Qwiic_Micro_OLED"]
+	path = lib/Qwiic_Micro_OLED
+	url = https://github.com/PatHock/Qwiic_Micro_OLED.git
