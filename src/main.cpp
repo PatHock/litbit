@@ -344,6 +344,8 @@
 
 //     delay(1000);
 // }
+
+
 /******************************************************************************
  * MicroOLED_Demo.ino
  * SFE_MicroOLED Library Demo
@@ -367,21 +369,20 @@
 // #include <SPI.h>  // Include SPI if you're using SPI
 #include <SFE_MicroOLED.h>  // Include the SFE_MicroOLED library
 
-// #include "Model/Display/Display.hpp"
-
 //////////////////////////
 // MicroOLED Definition //
 //////////////////////////
 #define PIN_RESET 9  // Connect RST to pin 9
-#define PIN_DC    8  // Connect DC to pin 8
-#define PIN_CS    10 // Connect CS to pin 10
-#define DC_JUMPER 0
-
+#define PIN_DC    1  // Connect DC to pin 8
 //////////////////////////////////
 // MicroOLED Object Declaration //
 //////////////////////////////////
-MicroOLED oled(PIN_RESET, PIN_DC, PIN_CS); // SPI declaration
-//MicroOLED oled(PIN_RESET, DC_JUMPER);    // I2C declaration
+/**
+ * Important
+ * Set address (PIN_DC)  = 1 and not 0
+ */
+MicroOLED oled(PIN_RESET, PIN_DC);    // I2C declaration
+
 
 void setup()
 {
@@ -393,6 +394,7 @@ void setup()
   
   randomSeed(analogRead(A0) + analogRead(A1));
 }
+
 
 // Center and print a small title
 // This function is quick and dirty. Only works for titles one
@@ -414,6 +416,7 @@ void printTitle(String title, int font)
   oled.clear(PAGE);
 }
 
+
 void pixelExample()
 {
   printTitle("Pixels", 1);
@@ -424,8 +427,6 @@ void pixelExample()
     oled.display();
   }
 }
-
-
 
 void lineExample()
 {
@@ -678,6 +679,4 @@ void loop()
   shapeExample();  // Then the shape example
   textExamples();  // Finally the text example
 }
-
-
 
