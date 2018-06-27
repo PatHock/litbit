@@ -10,6 +10,7 @@
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <avr/power.h>
+#include "Model/Ble/Ble.hpp"    //TODO: move 
 
 
 // ADXL header
