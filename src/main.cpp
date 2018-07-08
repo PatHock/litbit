@@ -5,8 +5,8 @@
  * June 4, 2018
  */
 
-#include <stdint.h>
 #include <Arduino.h>
+#include <stdint.h>
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <avr/power.h>
