@@ -49,10 +49,10 @@ int main(void)
 
 
   // Initialize controllers
-  I2cC    ->  init();
-  AccelC  ->  init();
-  EepromC ->  init();
-  RtcC    ->  init();
+  I2cC    ->  init(); 
+  AccelC  ->  init(); // TODO: Migrate functionality
+  EepromC ->  init(); //TODO: Migrate functionality
+  RtcC    ->  init(); 
   DisplayC -> init();
 
 
