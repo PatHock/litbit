@@ -11,12 +11,17 @@
 
 #include <Arduino.h>
 #include <BLEPeripheral.h>
+#include "../Constants/Port.hpp"
 
 class Ble
 {
     public:
         Ble(void);     // Constructor
         ~Ble(void); // Destructor
+
+        void reset();
+
+
         
     private:
 
