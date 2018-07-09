@@ -35,3 +35,27 @@ Accel::~Accel(void)
 {
     
 }
+
+int Accel::getAccelX(void)
+{
+    int accel[3];
+    adxl.readAccel(*(&accel));
+
+    return accel[0];    // accel contains X(elem. 0), Y(elem. 1), Z (elem. 2)   
+}
+
+int Accel::getAccelY(void)
+{
+    int accel[3];
+    adxl.readAccel(*(&accel));
+
+    return accel[1];    // accel contains X(elem. 0), Y(elem. 1), Z (elem. 2)
+}
+
+int Accel::getAccelZ(void)
+{
+    int accel[3];
+    adxl.readAccel(*(&accel));
+
+    return accel[2];    // accel contains X(elem. 0), Y(elem. 1), Z (elem. 2)
+}

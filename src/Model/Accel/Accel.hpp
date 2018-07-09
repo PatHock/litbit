@@ -21,20 +21,18 @@
 #define DISABLE 0
 
 class Accel 
-{
+{        
+
     public:
         Accel(void);     // Constructor
-        ~Accel(void); // Destructor
-        
-    private:
-        /*
-        * Required Data structures for Demo. May be replaced at a later date
-        */
-        typedef struct
-        {
-        uint16_t x, y, z;
-        } Acceleration;
+        ~Accel(void); // Deconstructor
 
+        int getAccelX(void);
+        int getAccelY(void);
+        int getAccelZ(void);
+
+
+    private:
         ADXL345 adxl;
 
 };

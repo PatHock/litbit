@@ -50,3 +50,8 @@ DateTime Rtc::getDateTime()
 // {
 //     MCP7940.
 // }
+
+//     // Use argument DateTime to manually set time, or 
+//     // leave blank to set time to the time when the program
+//     // was compiled
+//     rtc.adjust(currentDateTime);   

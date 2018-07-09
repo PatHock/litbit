@@ -78,3 +78,96 @@ int main(void)
 
   return 0;
 }
+
+
+
+// void loop()
+// {
+//     /**
+//    * Test #1: Try to read from the ADXL345 and
+//    * print out the results
+//    */
+//     readAcceleration(&currentReading);
+
+//     Serial.println("--------------------------------------------------");
+//     Serial.print("Accelerometer X, Y, Z readings (in Gs): ");
+//     Serial.print((float)(currentReading.x + 1)/256);
+//     Serial.print("\t");
+//     Serial.print((float)(currentReading.y + 1)/256);
+//     Serial.print("\t");
+//     Serial.println((float)(currentReading.z + 1)/256);
+
+//     /**
+//    * Test #2: Try to read out the time of day and
+//    * print out the results
+//    */
+//     readDateTime(&currentDateTime);
+//     Serial.print(currentDateTime.month());
+//     Serial.print("/");
+//     Serial.print(currentDateTime.day());
+//     Serial.print("/");
+//     Serial.print(currentDateTime.year());
+//     Serial.print("\t");
+//     Serial.print(currentDateTime.hour());
+//     Serial.print(":");
+//     Serial.print(currentDateTime.minute());
+//     Serial.print(":");
+//     Serial.println(currentDateTime.second());
+
+//     /**
+//     * Test #3: Try to write and read back some
+//     * random data
+//     */
+//     uint8_t array[5];
+//     for (int i = 0; i < 5; i++)
+//     {
+//         array[i] = random();
+//     }
+
+//     writeDataToEEPROM(array, 5);
+//     uint8_t buffer[5];
+
+//     Serial.print("Written to EEPROM: \t");
+//     Serial.print(array[0]);
+//     Serial.print("\t");
+//     Serial.print(array[1]);
+//     Serial.print("\t");
+//     Serial.print(array[2]);
+//     Serial.print("\t");
+//     Serial.print(array[3]);
+//     Serial.print("\t");
+//     Serial.println(array[4]);
+
+//     readDataFromEEPROM(buffer, 5);
+
+//     Serial.print("Read from EEPROM: \t");
+//     Serial.print(buffer[0]);
+//     Serial.print("\t");
+//     Serial.print(buffer[1]);
+//     Serial.print("\t");
+//     Serial.print(buffer[2]);
+//     Serial.print("\t");
+//     Serial.print(buffer[3]);
+//     Serial.print("\t");
+//     Serial.println(buffer[4]);
+
+//     bool testPass = true;
+//     for (int i = 0; i < 5; i++)
+//     {
+//         if (buffer[i] != array[i])
+//         {
+//             testPass = false;
+//         }
+//     }
+
+//     if (testPass)
+//     {
+//         Serial.println("EEPROM Test Passed.");
+//     }
+//     else
+//     {
+//         Serial.println("EEPROM Test Failed.");
+//     }
+
+//     delay(1000);
+// }

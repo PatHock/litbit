@@ -19,7 +19,8 @@ class Ble
         Ble(void);     // Constructor
         ~Ble(void); // Destructor
 
-        void reset();
+        void reset();   // TODO: Check this out later
+        
 
 
         
@@ -27,4 +28,6 @@ class Ble
 
 
 };
+
+
 #endif // BLE_HPP
