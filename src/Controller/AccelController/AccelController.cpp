@@ -50,11 +50,11 @@ AccelController* AccelController::getInstance()
  */
 void AccelController::printXYZ(void)
 {
-    Serial.print(normalize(accelModel->getAccelX()));
+    Serial.print(normalize(accelModel->getAccelX()), 4);
     Serial.print(",");
-    Serial.print(normalize(accelModel->getAccelY()));
+    Serial.print(normalize(accelModel->getAccelY()), 4);
     Serial.print(",");
-    Serial.println(normalize(accelModel->getAccelZ()));
+    Serial.println(normalize(accelModel->getAccelZ()), 4);
 }
 
 /** 
