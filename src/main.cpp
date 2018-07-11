@@ -13,7 +13,7 @@
 
 #include "Controller/Controller.hpp"
 
-#define SERIAL_SPEED 9600
+#define SERIAL_SPEED 14400
 
 int main(void)
 {
@@ -50,7 +50,7 @@ int main(void)
 
   // Initialize controllers
   I2cC    ->  init(); 
-  AccelC  ->  init(); // TODO: Migrate functionality
+  AccelC  ->  init(); 
   EepromC ->  init(); //TODO: Migrate functionality
   RtcC    ->  init(); 
   DisplayC -> init();
@@ -58,10 +58,13 @@ int main(void)
 
   while (true)
   {
-    digitalWrite(LED_BUILTIN, HIGH); // set the LED on
-    delay(250);                      // wait for a second
-    digitalWrite(LED_BUILTIN, LOW);  // set the LED off
-    delay(250);                      // wait for a second
+    // digitalWrite(LED_BUILTIN, HIGH); // set the LED on
+    // delay(250);                      // wait for a second
+    // digitalWrite(LED_BUILTIN, LOW);  // set the LED off
+    // delay(250);                      // wait for a second
+
+    AccelC->printXYZ();
+    delay(20);  // Should give a sample rate of approx. 50 Hz
 
     // clock_prescale_set(clock_div_4);
     // // power save
