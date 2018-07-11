@@ -38,7 +38,7 @@ int main(void)
     ;
   }
 
-  Serial.println("Itsy Bitsy Initialized.");
+  // Serial.println("Itsy Bitsy Initialized.");
 
   // Create controller singletons
   I2cController *I2cC        =  I2cController::getInstance();
@@ -58,10 +58,6 @@ int main(void)
 
   while (true)
   {
-    // digitalWrite(LED_BUILTIN, HIGH); // set the LED on
-    // delay(250);                      // wait for a second
-    // digitalWrite(LED_BUILTIN, LOW);  // set the LED off
-    // delay(250);                      // wait for a second
 
     AccelC->printXYZ();
     delay(20);  // Should give a sample rate of approx. 50 Hz
@@ -84,21 +80,7 @@ int main(void)
 
 
 
-// void loop()
-// {
-//     /**
-//    * Test #1: Try to read from the ADXL345 and
-//    * print out the results
-//    */
-//     readAcceleration(&currentReading);
 
-//     Serial.println("--------------------------------------------------");
-//     Serial.print("Accelerometer X, Y, Z readings (in Gs): ");
-//     Serial.print((float)(currentReading.x + 1)/256);
-//     Serial.print("\t");
-//     Serial.print((float)(currentReading.y + 1)/256);
-//     Serial.print("\t");
-//     Serial.println((float)(currentReading.z + 1)/256);
 
 //     /**
 //    * Test #2: Try to read out the time of day and
