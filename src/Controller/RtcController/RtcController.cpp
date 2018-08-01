@@ -38,3 +38,23 @@ RtcController* RtcController::getInstance()
 
     return _pInstance;
 }
+
+void RtcController::printTimeToSerial(void) 
+{
+    DateTime now = RtcModel->getDateTime();
+    Serial.println(now.unixtime());
+    // Serial.print(" ");
+    // Serial.print(now.day());
+    // Serial.print(now.month());
+    // Serial.print(" ");
+    // Serial.print(now.day());
+    // Serial.print(" , ");
+    // Serial.print(now.year());
+    // Serial.print("   ");
+    // Serial.print(now.hour());
+    // Serial.print(":");
+    // Serial.print(now.minute());
+    // Serial.print(":");
+    // Serial.print(now.second());
+    // Serial.println("");
+}

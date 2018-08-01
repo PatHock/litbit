@@ -29,8 +29,8 @@ int main(void)
     delay(3000); // wait 3 seconds for the serial connection
   #endif
 
-  pinMode(LED_BUILTIN, OUTPUT);
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  // pinMode(LED_BUILTIN, OUTPUT);
+  // set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
   Serial.begin(SERIAL_SPEED);
 
@@ -59,8 +59,12 @@ int main(void)
   while (true)
   {
 
-    AccelC->printXYZ();
-    delay(20);  // Should give a sample rate of approx. 50 Hz
+    // AccelC->printXYZ();
+    // delay(20);  // Should give a sample rate of approx. 50 Hz
+
+    RtcC ->printTimeToSerial();
+    delay(100);
+    
 
     // clock_prescale_set(clock_div_4);
     // // power save
@@ -87,6 +91,7 @@ int main(void)
 //    * print out the results
 //    */
 //     readDateTime(&currentDateTime);
+
 //     Serial.print(currentDateTime.month());
 //     Serial.print("/");
 //     Serial.print(currentDateTime.day());

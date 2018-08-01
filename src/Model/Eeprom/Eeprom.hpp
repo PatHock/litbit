@@ -16,8 +16,10 @@ class Eeprom
     public:
         Eeprom(void);     // Constructor
         ~Eeprom(void); // Destructor
+        
     
     private:
+        
 
 
 };
