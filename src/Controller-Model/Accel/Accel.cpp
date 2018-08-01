@@ -6,36 +6,46 @@
  * June 4, 2018
  */
 
-#include "AccelController.hpp"
+#include "Accel.hpp"
 
-AccelController* AccelController::_pInstance = NULL;
+Accel* Accel::_pInstance = NULL;
 
 /**
  * Deconstructor
  */
-AccelController::~AccelController(void) 
+Accel::~Accel(void) 
 {
-    delete accelModel;
+    delete adxl;
 }
 
 /**
  * Initialization
  */
-void AccelController::init(void)
+void Accel::init(void)
 {
     accelRange = ADXL_RANGE_4G;
-    accelModel = new Accel();
-    accelModel -> setAccelRange(accelRange);
+
+    adxl = new ADXL345();
+    adxl -> powerOn();
+    adxl -> setActivityXYZ(1,1,1);  // Enable activity detection in all axes
+    adxl -> setActivityThreshold(75);   // 62.5mg per increment (verify that this is true)
+    adxl -> setTimeInactivity(2);   // set inactivity timeout period, in seconds
+
+    // Enable interrups (1 ---> enable)
+    // adxl -> InactivityINT(1);
+    // adxl -> ActivityINT(1);
+
+    setAccelRange(accelRange);
 }
 
 /**
  * Singleton Manager
  */
-AccelController* AccelController::getInstance()
+Accel* Accel::getInstance()
 {
     if(!_pInstance) 
     {
-        _pInstance = new AccelController();
+        _pInstance = new Accel();
     }
 
     return _pInstance;
@@ -48,13 +58,14 @@ AccelController* AccelController::getInstance()
  * to serial terminal in CSV format.
  * @retval None
  */
-void AccelController::printXYZ(void)
+void Accel::printXYZ(void)
 {
-    Serial.print(normalize(accelModel->getAccelX()), 4);
+    adxl -> readAccel(accelArray);
+    Serial.print(normalize(accelArray[0]), 4);
     Serial.print(",");
-    Serial.print(normalize(accelModel->getAccelY()), 4);
+    Serial.print(normalize(accelArray[1]), 4);
     Serial.print(",");
-    Serial.println(normalize(accelModel->getAccelZ()), 4);
+    Serial.println(normalize(accelArray[2]), 4);
 }
 
 /** 
@@ -63,8 +74,33 @@ void AccelController::printXYZ(void)
  * @param  accelReading: Raw acceleration value from accelerometer
  * @retval Normalized acceleration reading, 1 = 1G
  */
-float AccelController::normalize(int16_t accelReading)
+float Accel::normalize(int16_t accelReading)
 {
     return (float)(accelReading * accelRange) / (float)512;
 }
 
+
+/** 
+ * @brief  Sets the full-scale range for the ADXL345
+ * @note   
+ * @param  accelRange: The acceleration (in Gs) represented by the full scale 
+ * of the Accelerometer (+/- 1024). 2, 4, 8, and 16 are the only valid values.
+ * @retval boolean  - true if range set successfully, false otherwise.
+ */
+bool Accel::setAccelRange(uint8_t accelRange)
+{
+    bool isValidRange = false;
+
+    if(accelRange == 2 || accelRange == 4 || accelRange == 8 || accelRange == 16)
+    {
+        adxl->setRangeSetting(accelRange);
+        isValidRange = true;
+    }
+    
+    return isValidRange;
+}
+
+void Accel::readAccel(int* accelArray)
+{
+    adxl->readAccel(accelArray);
+}

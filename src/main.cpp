@@ -11,7 +11,7 @@
 #include <avr/sleep.h>
 #include <avr/power.h>
 
-#include "Controller/Controller.hpp"
+#include "Controller-Model/Controller-Model.hpp"
 
 #define SERIAL_SPEED 14400
 
@@ -41,19 +41,23 @@ int main(void)
   // Serial.println("Itsy Bitsy Initialized.");
 
   // Create controller singletons
-  I2cController *I2cC        =  I2cController::getInstance();
-  AccelController *AccelC    =  AccelController::getInstance();
-  EepromController *EepromC  =  EepromController::getInstance();
-  RtcController *RtcC        =  RtcController::getInstance();
-  DisplayController* DisplayC = DisplayController::getInstance();
+  // I2cController *I2cC        =  I2cController::getInstance();
+  // AccelController *AccelC    =  AccelController::getInstance();
+  // EepromController *EepromC  =  EepromController::getInstance();
+  // RtcController *RtcC        =  RtcController::getInstance();
+  // DisplayController* DisplayC = DisplayController::getInstance();
+
+  Accel *Accel = Accel::getInstance();
 
 
   // Initialize controllers
-  I2cC    ->  init(); 
-  AccelC  ->  init(); 
-  EepromC ->  init(); //TODO: Migrate functionality
-  RtcC    ->  init(); 
-  DisplayC -> init();
+  // I2cC    ->  init(); 
+  // AccelC  ->  init(); 
+  // EepromC ->  init(); //TODO: Migrate functionality
+  // RtcC    ->  init(); 
+  // DisplayC -> init();
+
+  Accel ->init();
 
 
   while (true)
@@ -62,7 +66,8 @@ int main(void)
     // AccelC->printXYZ();
     // delay(20);  // Should give a sample rate of approx. 50 Hz
 
-    RtcC ->printTimeToSerial();
+    // RtcC ->printTimeToSerial();
+    Accel ->printXYZ();
     delay(100);
     
 
