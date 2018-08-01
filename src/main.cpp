@@ -29,52 +29,33 @@ int main(void)
     delay(3000); // wait 3 seconds for the serial connection
   #endif
 
-  // pinMode(LED_BUILTIN, OUTPUT);
-  // set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  clock_prescale_set(clock_div_1);
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
   Serial.begin(SERIAL_SPEED);
 
+  // Don't allow startup until serial is available
   while(!Serial) {
     ;
   }
 
-  // Serial.println("Itsy Bitsy Initialized.");
-
-  // Create controller singletons
-  // I2cController *I2cC        =  I2cController::getInstance();
-  // AccelController *AccelC    =  AccelController::getInstance();
-  // EepromController *EepromC  =  EepromController::getInstance();
-  // RtcController *RtcC        =  RtcController::getInstance();
-  // DisplayController* DisplayC = DisplayController::getInstance();
-
+  // Get controller-model instances
   Accel* Accel = Accel::getInstance();
   Rtc* Rtc = Rtc::getInstance();
 
-
-  // Initialize controllers
-  // I2cC    ->  init(); 
-  // AccelC  ->  init(); 
-  // EepromC ->  init(); //TODO: Migrate functionality
-  // RtcC    ->  init(); 
-  // DisplayC -> init();
-
+  // Initialize controller-models
   Accel -> init();
   Rtc -> init();
 
-
-  while (true)
+  while (1)
   {
 
-    // AccelC->printXYZ();
-    // delay(20);  // Should give a sample rate of approx. 50 Hz
-
-    // RtcC ->printTimeToSerial();
     Accel -> printXYZ();
     Rtc -> printTimeToSerial();
-    delay(100);
-    
 
-    // clock_prescale_set(clock_div_4);
+    delay(1000);
+  
+    
     // // power save
     // cli();  // Disable global interrupts
     // if(true) {
