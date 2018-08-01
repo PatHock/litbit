@@ -33,6 +33,12 @@ class Rtc
 
         DateTime getDateTime();
         void setDateTime();
+        bool getAlarmState(const uint8_t alarmNumber);
+        bool clearAlarm(const uint8_t alarmNumber);
+        bool setAlarm(const uint8_t alarmNumber, const uint8_t alarmType,
+                const DateTime dt, const bool state = true );
+        bool isAlarm(const uint8_t alarmNumber);
+
 
     private:
         MCP7940_Class MCP7940;
