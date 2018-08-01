@@ -47,7 +47,8 @@ int main(void)
   // RtcController *RtcC        =  RtcController::getInstance();
   // DisplayController* DisplayC = DisplayController::getInstance();
 
-  Accel *Accel = Accel::getInstance();
+  Accel* Accel = Accel::getInstance();
+  Rtc* Rtc = Rtc::getInstance();
 
 
   // Initialize controllers
@@ -57,7 +58,8 @@ int main(void)
   // RtcC    ->  init(); 
   // DisplayC -> init();
 
-  Accel ->init();
+  Accel -> init();
+  Rtc -> init();
 
 
   while (true)
@@ -67,7 +69,8 @@ int main(void)
     // delay(20);  // Should give a sample rate of approx. 50 Hz
 
     // RtcC ->printTimeToSerial();
-    Accel ->printXYZ();
+    Accel -> printXYZ();
+    Rtc -> printTimeToSerial();
     delay(100);
     
 

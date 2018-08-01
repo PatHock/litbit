@@ -10,12 +10,11 @@
 #define CONTROLLER_MODEL_HPP
 
 #include "Accel/Accel.hpp"
+#include "Rtc/Rtc.hpp"
+#include "Ble/Ble.hpp"
+#include "Display/Display.hpp"
+#include "Eeprom/Eeprom.hpp"
 
-// #include "Controller/I2cController/I2cController.hpp"
-// #include "Controller/EepromController/EepromController.hpp"
-// #include "Controller/RtcController/RtcController.hpp"
-// #include "BleController/BleController.hpp"
-// #include "DisplayController/DisplayController.hpp"
 
 
 #endif  //CONTROLLER_MODEL_HPP

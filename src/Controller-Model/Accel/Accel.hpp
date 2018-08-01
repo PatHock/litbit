@@ -1,13 +1,13 @@
 /**
- * AccelController.hpp
+ * Accelr.hpp
  * ADXL345 Accelerometer
  * 
  * Patrick Hock 
- * June 4, 2018
+ * Aug 1, 2018
  */
 
-#ifndef ACCELCONTROLLER_HPP
-#define ACCELCONTROLLER_HPP
+#ifndef ACCEL_HPP
+#define ACCEL_HPP
 
 #include <stdint.h>
 #include <Arduino.h>
@@ -17,8 +17,6 @@
 #define ADXL_RANGE_4G 4
 #define ADXL_RANGE_8G 8
 #define ADXL_RANGE_16G 16
-#define ENABLE 1
-#define DISABLE 0
 
 class Accel
 {
@@ -26,7 +24,7 @@ class Accel
         // Destructor
         ~Accel(void); 
 
-        // Returns the instance of EepromController
+        // Returns the instance of Accel
         static Accel* getInstance();
 
         // Initializes, since constructor cannot be called (to enforce singletons)
@@ -46,7 +44,7 @@ class Accel
         // Constructor
         Accel(void){};
 
-        // Pointer to the single instance of EepromController 
+        // Pointer to the single instance of Accel
         static Accel* _pInstance;
 
         uint8_t accelRange;
@@ -56,4 +54,4 @@ class Accel
 
 };
 
-#endif  // ACCELCONTROLLER_HPP
+#endif  // ACCEL_HPP
