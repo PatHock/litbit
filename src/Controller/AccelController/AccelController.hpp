@@ -26,6 +26,8 @@ class AccelController
         // Initializes, since constructor cannot be called (to enforce singletons)
         void init(void);
 
+        void printXYZ(void);    // used for ms4 step counting
+
     private:
         // Constructor
         AccelController(void){};
@@ -33,7 +35,12 @@ class AccelController
         // Pointer to the single instance of EepromController 
         static AccelController* _pInstance;
 
-        Accel* AccelModel;
+        Accel* accelModel;
+
+        uint8_t accelRange;
+
+        float normalize(int16_t accelReading);
+
 
 };
 

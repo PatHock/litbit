@@ -27,9 +27,11 @@ class Accel
         Accel(void);     // Constructor
         ~Accel(void); // Deconstructor
 
-        int getAccelX(void);
-        int getAccelY(void);
-        int getAccelZ(void);
+        int16_t getAccelX(void);
+        int16_t getAccelY(void);
+        int16_t getAccelZ(void);
+
+        bool setAccelRange(uint8_t AdxlRange);
 
 
     private:

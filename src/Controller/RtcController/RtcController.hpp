@@ -23,6 +23,9 @@ class RtcController
 
         // Initializes, since constructor cannot be called (to enforce singletons)
         void init(void);
+
+        // Prints time to the serial bus. Duh.
+        void printTimeToSerial(void);
         
     
     private:

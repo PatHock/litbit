@@ -13,7 +13,7 @@
 
 #include "Controller/Controller.hpp"
 
-#define SERIAL_SPEED 9600
+#define SERIAL_SPEED 14400
 
 int main(void)
 {
@@ -29,8 +29,8 @@ int main(void)
     delay(3000); // wait 3 seconds for the serial connection
   #endif
 
-  pinMode(LED_BUILTIN, OUTPUT);
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  // pinMode(LED_BUILTIN, OUTPUT);
+  // set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
   Serial.begin(SERIAL_SPEED);
 
@@ -38,7 +38,7 @@ int main(void)
     ;
   }
 
-  Serial.println("Itsy Bitsy Initialized.");
+  // Serial.println("Itsy Bitsy Initialized.");
 
   // Create controller singletons
   I2cController *I2cC        =  I2cController::getInstance();
@@ -50,7 +50,7 @@ int main(void)
 
   // Initialize controllers
   I2cC    ->  init(); 
-  AccelC  ->  init(); // TODO: Migrate functionality
+  AccelC  ->  init(); 
   EepromC ->  init(); //TODO: Migrate functionality
   RtcC    ->  init(); 
   DisplayC -> init();
@@ -58,10 +58,13 @@ int main(void)
 
   while (true)
   {
-    digitalWrite(LED_BUILTIN, HIGH); // set the LED on
-    delay(250);                      // wait for a second
-    digitalWrite(LED_BUILTIN, LOW);  // set the LED off
-    delay(250);                      // wait for a second
+
+    // AccelC->printXYZ();
+    // delay(20);  // Should give a sample rate of approx. 50 Hz
+
+    RtcC ->printTimeToSerial();
+    delay(100);
+    
 
     // clock_prescale_set(clock_div_4);
     // // power save
@@ -81,27 +84,14 @@ int main(void)
 
 
 
-// void loop()
-// {
-//     /**
-//    * Test #1: Try to read from the ADXL345 and
-//    * print out the results
-//    */
-//     readAcceleration(&currentReading);
 
-//     Serial.println("--------------------------------------------------");
-//     Serial.print("Accelerometer X, Y, Z readings (in Gs): ");
-//     Serial.print((float)(currentReading.x + 1)/256);
-//     Serial.print("\t");
-//     Serial.print((float)(currentReading.y + 1)/256);
-//     Serial.print("\t");
-//     Serial.println((float)(currentReading.z + 1)/256);
 
 //     /**
 //    * Test #2: Try to read out the time of day and
 //    * print out the results
 //    */
 //     readDateTime(&currentDateTime);
+
 //     Serial.print(currentDateTime.month());
 //     Serial.print("/");
 //     Serial.print(currentDateTime.day());

@@ -14,23 +14,26 @@
 Rtc::Rtc(void) 
 {
     // Establish connection with MCP7940N
-    if(MCP7940.begin())
-        Serial.println(F("MCP7940N found."));
-    else
-        Serial.println(F("Unable to find MCP7940N."));
+    MCP7940.begin();
+    // if(MCP7940.begin())
+    //     Serial.println(F("MCP7940N found."));
+    // else
+    //     Serial.println(F("Unable to find MCP7940N."));
     
     // Enable oscillator
-    if(!MCP7940.deviceStatus())
-    {
-        Serial.println(F("Oscillator is off, turning it on."));
+    // if(!MCP7940.deviceStatus())
+    // {
+    //     Serial.println(F("Oscillator is off, turning it on."));
+    //     if(!MCP7940.deviceStart())
+    //         Serial.println(F("Oscillator did not start."));
+    // } 
 
-        if(!MCP7940.deviceStart())
-            Serial.println(F("Oscillator did not start."));
-    } 
+    MCP7940.deviceStatus();
+    MCP7940.deviceStart();
 
     MCP7940.adjust();  
 
-    Serial.println(F("MCP7940N initialized."));
+    // Serial.println(F("MCP7940N initialized."));
 }
 
 /**
