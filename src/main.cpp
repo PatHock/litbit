@@ -67,7 +67,7 @@ int main(void)
   // Initialize controller-models
   I2c -> init();
   Rtc -> init();
-  Eeprom -> init();
+  Eeprom -> init(); // make sure this one is AFTER the RTC
   Display -> init();
   Accel -> init();
   Ble -> init();
