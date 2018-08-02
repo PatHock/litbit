@@ -25,6 +25,14 @@
 #define MONTH_NOV 11
 #define MONTH_DEC 12
 
+const uint8_t ALARM_TYPE_SECS = 0;
+const uint8_t ALARM_TYPE_MINS = 1;
+const uint8_t ALARM_TYPE_HOURS = 2;
+const uint8_t ALARM_TYPE_DAYOFWEEK = 3;
+const uint8_t ALARM_TYPE_DATE = 4;
+const uint8_t ALARM_TYPE_ALL = 7;
+
+
 class Rtc 
 {
     public:
@@ -43,6 +51,8 @@ class Rtc
         DateTime* getDateTime();
 
         MCP7940_Class* MCP7940;
+
+        bool setTimer(uint32_t seconds);
 
 
 

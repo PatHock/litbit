@@ -15,6 +15,15 @@
 
 #define SERIAL_SPEED 14400
 
+volatile bool alarmFlag = 0;
+
+void ISR_Rtc_Alarm() 
+{
+  noInterrupts();
+  alarmFlag = 1;
+  interrupts();
+}
+
 int main(void)
 {
 
@@ -32,6 +41,10 @@ int main(void)
   clock_prescale_set(clock_div_1);
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
+  pinMode(PIN_RTC_MFP, INPUT);
+  attachInterrupt(digitalPinToInterrupt(PIN_RTC_MFP), ISR_Rtc_Alarm, FALLING);
+
+
   Serial.begin(SERIAL_SPEED);
 
   // Don't allow startup until serial is available
@@ -39,27 +52,61 @@ int main(void)
     ;
   }
 
+ 
   // Get controller-model instances
   I2c* I2c = I2c::getInstance();
-  Accel* Accel = Accel::getInstance();
+  // Accel* Accel = Accel::getInstance();
   Rtc* Rtc = Rtc::getInstance();
-  Eeprom* Eeprom = Eeprom::getInstance();
-  Display* Display = Display::getInstance();
-  Ble* Ble = Ble::getInstance();
+  // Eeprom* Eeprom = Eeprom::getInstance();
+  // Display* Display = Display::getInstance();
+  // Ble* Ble = Ble::getInstance();
 
   // Initialize controller-models
   I2c -> init();
   Rtc -> init();
-  Eeprom -> init();
-  Display -> init();
-  Accel -> init();
-  Ble -> init();
+  // Eeprom -> init();
+  // Display -> init();
+  // Accel -> init();
+  // Ble -> init();
+
+  uint8_t alarmType;
+
+  Rtc -> MCP7940 -> clearAlarm(0);
+  Serial.println("Alarm not set. Alarm status is: ");
+  Serial.println(Rtc -> MCP7940 -> getAlarmState(0));
+  Serial.print("Alarm unixtime is: ");
+  Serial.println((Rtc -> MCP7940 -> getAlarm(0, alarmType)).unixtime());
+  Serial.print("Alarm type is: ");
+  Serial.println(alarmType);
+  Serial.print("Current unixtime is: ");
+  Serial.println(Rtc -> getDateTime() -> unixtime());
+
+  Rtc -> setTimer(10);
+  delay(100);
+  
+  Serial.print("Alarm is set. Alarm status is: ");
+  Serial.println(Rtc -> MCP7940 -> getAlarmState(0));
+  Serial.print("Alarm unixtime is: ");
+  Serial.println((Rtc -> MCP7940 -> getAlarm(0, alarmType)).unixtime());
+  Serial.print("Alarm type is: ");
+  Serial.println(alarmType);
+
+
 
   while (1)
   {
+    if(alarmFlag)
+    {
+      noInterrupts();
+      alarmFlag = 0;
+      interrupts();
 
-    Accel -> printXYZ();
-    Rtc -> printTimeToSerial();
+      Serial.println("Alarm triggered.");
+    }
+
+    // Accel -> printXYZ();
+    // Rtc -> printTimeToSerial();
+    Serial.print(Rtc -> MCP7940 -> isAlarm(0));
 
     delay(1000);
   

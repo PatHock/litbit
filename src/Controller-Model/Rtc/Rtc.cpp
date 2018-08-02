@@ -28,6 +28,19 @@ void Rtc::init(void)
 
 }
 
+/** 
+ * @brief  
+ * @note   
+ * @param  seconds: Number of seconds in the future when alarm should
+ *         go off 
+ * @retval 
+ */
+bool Rtc::setTimer(uint32_t seconds)
+{
+    MCP7940 -> clearAlarm(0);
+    return MCP7940 -> setAlarm(0, ALARM_TYPE_ALL, DateTime(now -> unixtime() + seconds), 1);
+}
+
 /**
  * Deconstructor
  */
