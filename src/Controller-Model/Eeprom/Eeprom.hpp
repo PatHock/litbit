@@ -27,7 +27,7 @@ class Eeprom
     private:
         Eeprom(void){};     // Constructor
 
-        // Pointer to the single instance of EepromController 
+        // Pointer to the single instance of Eeprom
         static Eeprom* _pInstance;
         
 };

@@ -14,6 +14,7 @@
 #include "Ble/Ble.hpp"
 #include "Display/Display.hpp"
 #include "Eeprom/Eeprom.hpp"
+#include "I2c/I2c.hpp"
 
 
 

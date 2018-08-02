@@ -2,7 +2,7 @@
  * I2c.hpp
  * 
  * Patrick Hock 
- * June 5, 2018
+ * August 1, 2018
  */
 
 #ifndef I2C_HPP
@@ -17,10 +17,14 @@ class I2c
 {
     public:
         ~I2c(void); // Destructor
-        I2c(void);     // Constructor
+        static I2c* getInstance();
+        void init(void);
+        
         
     
     private:
+        I2c(void){};     // Constructor
+        static I2c* _pInstance;
         
 };
 

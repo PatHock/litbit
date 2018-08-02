@@ -9,6 +9,7 @@
 #include "Eeprom.hpp"
 
 
+Eeprom* Eeprom::_pInstance = NULL;
 
 /**
  * Deconstructor
