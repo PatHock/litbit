@@ -17,12 +17,15 @@ void Eeprom::init(void)
 {
     // read lastEntryAddress
     Rtc* Rtc = Rtc::getInstance();
-    writeData((uint16_t)0x0, Rtc ->getDateTime()->unixtime(), 345);
-    // readEntry((uint16_t)0x0, entryUnixTime, stepCount);
+    unixTime = 0;
+    stepCount = 0;
+
+    // writeData((uint16_t)0x00, Rtc->getDateTime()->unixtime(), (uint16_t)346);
+    // readEntry((uint16_t)0x00);
     // Serial.print("unix time + step count: ");
-    // Serial.print(*entryUnixTime);
+    // Serial.print(unixTime);
     // Serial.print(", ");
-    // Serial.println(*stepCount);
+    // Serial.println(stepCount);
 
 }
 
@@ -67,11 +70,9 @@ bool Eeprom::eraseAllEntries(void)
  * @brief  Reads an entry from the Eeprom, given an address.
  * @note   
  * @param  address: 16-bit address to read from
- * @param  unixTime: pointer to a 32-bit uint. Entry unixtime is written here.
- * @param  stepCount: pointer to 16-bit uint stepcount. Entry step count value is written here.
  * @retval None
  */
-void Eeprom::readEntry(uint16_t address, uint32_t* unixTime, uint16_t* stepCount)
+void Eeprom::readEntry(uint16_t address)
 {
     Wire.beginTransmission((uint8_t)deviceAddress); // initiate transaction
 
@@ -80,22 +81,17 @@ void Eeprom::readEntry(uint16_t address, uint32_t* unixTime, uint16_t* stepCount
 
     Wire.endTransmission();
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 6; i++)
     {
         Wire.requestFrom((uint8_t)0x50, (uint8_t)1);
         if (Wire.available())
         {
-            switch (i) 
-            {
-                case 0: *unixTime = (Wire.read() << 24);
-                case 1: *unixTime &= (Wire.read() << 16);
-                case 2: *unixTime &= (Wire.read() << 8);
-                case 3: *unixTime &= Wire.read();
-                case 4: *stepCount = (Wire.read() << 8);
-                case 5: *stepCount &= Wire.read();
-            }
+            buffer[i] = (uint8_t)Wire.read();
         }
     }
+
+        unixTime = ((uint32_t)buffer[0] << 24) | ((uint32_t)buffer[1] << 16) | ((uint32_t)buffer[2] << 8) | buffer[3];
+        stepCount = (uint16_t)buffer[4] << 8 | buffer[5];
 }
 
 /** 
@@ -114,13 +110,13 @@ void Eeprom::writeData(uint16_t dataAddress, uint32_t unixTime, uint16_t stepCou
     Wire.write((uint8_t)(dataAddress & 0xFF)); // second half
 
     // four wire.writes for unixtime, two for step count
-    Wire.write((uint8_t)((unixTime >> 24) & 0xFF)); // first 8 bits of unixtime
-    Wire.write((uint8_t)((unixTime >> 16) & 0xFF)); // first 8 bits of unixtime
-    Wire.write((uint8_t)((unixTime >> 8) & 0xFF)); // first 8 bits of unixtime
-    Wire.write((uint8_t)(unixTime & 0xFF)); // first 8 bits of unixtime
+    Wire.write((uint8_t)(unixTime >> 24)); // first 8 bits of unixtime
+    Wire.write((uint8_t)(unixTime >> 16)); // second 8 bits of unixtime
+    Wire.write((uint8_t)(unixTime >> 8)); // third 8 bits of unixtime
+    Wire.write((uint8_t)(unixTime & 0xFF)); // last 8 bits of unixtime
 
-    Wire.write((uint8_t)(stepCount >> 8)); // first 8 bits of unixtime
-    Wire.write((uint8_t)(unixTime& 0xFF)); // first 8 bits of unixtime
+    Wire.write((uint8_t)(stepCount >> 8)); // first 8 bits of stepCount
+    Wire.write((uint8_t)(stepCount & 0xFF)); // second 8 bits of stepCount
 
     Wire.endTransmission(); // Nothing's wrong it's fine
     delay(5);               // Allow time for write to occur - write should not be followed immediately by a read
@@ -133,8 +129,7 @@ void Eeprom::writeData(uint16_t dataAddress, uint32_t unixTime, uint16_t stepCou
  */
 Eeprom::~Eeprom(void)
 {
-    delete entryUnixTime;
-    delete stepCount;
+
 }
 
 /**
@@ -149,57 +144,3 @@ Eeprom* Eeprom::getInstance()
 
     return _pInstance;
 }
-
-// /**
-//  * Function writes a series of uint16_t values to the EEPROM
-//  * from the data array. Length of array is specified by the len parameter.
-//  * All writing is assumed to occur at EEPROM storage address 0x0.
-//  * Any existing data should be overwritten.
-//  */
-// void writeDataToEEPROM(uint8_t *data, uint8_t len)
-// {
-//     uint16_t dataAddress = 0x0;
-//     uint16_t deviceAddress = 0x50;
-
-//     Wire.beginTransmission((uint8_t)deviceAddress); // initiate transaction
-
-//     Wire.write((uint8_t)(dataAddress >> 8));   // First half of 16 - bit address
-//     Wire.write((uint8_t)(dataAddress & 0xFF)); // second half
-
-//     for (int i = 0; i < len; i++)
-//     {
-//         // Per datasheet, successive write operations are sequential in memory
-//         Wire.write((uint8_t)data[i]);
-//     }
-
-//     Wire.endTransmission(); // Nothing's wrong it's fine
-//     delay(5);               // Allow time for write to occur - write should not be followed immediately by a read
-// }
-
-// /**
-//  * Function reads a sequence of uint16_t values from the EEPROM
-//  * and stores the result in the buffer array. Length of buffer is
-//  * specified by the len parameter. All reads are assumed to begin at EEPROM storage
-//  * address 0x0.
-//  */
-// void readDataFromEEPROM(uint8_t *buffer, uint16_t len)
-// {
-//     uint16_t dataAddress = 0x0;
-//     uint16_t deviceAddress = 0x50;
-
-//     Wire.beginTransmission((uint8_t)deviceAddress); // initiate transaction
-
-//     Wire.write((uint8_t)(dataAddress >> 8));   // First half of 16 - bit address
-//     Wire.write((uint8_t)(dataAddress & 0xFF)); // second half
-
-//     Wire.endTransmission();
-
-//     for (int i = 0; i < len; i++)
-//     {
-//         Wire.requestFrom((uint8_t)0x50, (uint8_t)1);
-//         if (Wire.available())
-//         {
-//             buffer[i] = Wire.read();
-//         }
-//     }
-// }
