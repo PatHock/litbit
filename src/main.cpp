@@ -40,18 +40,20 @@ int main(void)
   }
 
   // Get controller-model instances
+  I2c* I2c = I2c::getInstance();
   Accel* Accel = Accel::getInstance();
   Rtc* Rtc = Rtc::getInstance();
   Eeprom* Eeprom = Eeprom::getInstance();
-  I2c* I2c = I2c::getInstance();
   Display* Display = Display::getInstance();
+  Ble* Ble = Ble::getInstance();
 
   // Initialize controller-models
-  Accel -> init();
+  I2c -> init();
   Rtc -> init();
   Eeprom -> init();
-  I2c -> init();
   Display -> init();
+  Accel -> init();
+  Ble -> init();
 
   while (1)
   {
