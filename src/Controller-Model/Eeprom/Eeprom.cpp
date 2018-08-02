@@ -20,12 +20,20 @@ void Eeprom::init(void)
     unixTime = 0;
     stepCount = 0;
 
-    // writeData((uint16_t)0x00, Rtc->getDateTime()->unixtime(), (uint16_t)346);
-    // readEntry((uint16_t)0x00);
-    // Serial.print("unix time + step count: ");
-    // Serial.print(unixTime);
-    // Serial.print(", ");
-    // Serial.println(stepCount);
+    writeData((uint16_t)0x00, Rtc->getDateTime()->unixtime(), (uint16_t)346);
+    readEntry((uint16_t)0x00);
+    Serial.print("unix time + step count: ");
+    Serial.print(unixTime);
+    Serial.print(", ");
+    Serial.println(stepCount);
+
+    eraseAllEntries();
+    readEntry((uint16_t)0x00);
+    Serial.print("unix time + step count: ");
+    Serial.print(unixTime);
+    Serial.print(", ");
+    Serial.println(stepCount);
+
 
 }
 
@@ -57,13 +65,31 @@ bool Eeprom::log(uint16_t steps)
 /** 
  * @brief  Erases entire Eeprom
  * @note   
- * @retval True if every address of Eeprom reads (0)
+ * @retval 
  */
 bool Eeprom::eraseAllEntries(void)
 {
     // look in datasheet on how to erase. Otherwise, write 0x0 to all addresses
     // read entire EEPROM, return true if all entries are 0x0
-    return 0;
+    
+
+    for(uint16_t startAddr=0; startAddr<=0xFF7F; startAddr+=128) //0x1ff7f
+    {
+        Wire.beginTransmission((uint8_t)0x50); // initiate transaction
+        Wire.write((uint8_t)(startAddr >> 8));   // First half of 16 - bit address
+        Wire.write((uint8_t)(startAddr & 0xFF)); // second half
+
+        for(int i=0; i<128; i++)
+        {
+            Wire.write((uint8_t)0x0);
+        }
+
+        Wire.endTransmission(); // Nothing's wrong it's fine
+        delay(5);               // Allow time for write to occur - write should not be followed immediately by a read
+    }
+
+
+    return true;
 }
 
 /** 
@@ -121,7 +147,6 @@ void Eeprom::writeData(uint16_t dataAddress, uint32_t unixTime, uint16_t stepCou
     Wire.endTransmission(); // Nothing's wrong it's fine
     delay(5);               // Allow time for write to occur - write should not be followed immediately by a read
 }
-
 
 
 /**
