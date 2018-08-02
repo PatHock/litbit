@@ -29,6 +29,7 @@ int main(void)
 
   //IMPORTANT - Init code below is necessary for board to function properly
   init();
+  clock_prescale_set(clock_div_1);
 
   #ifdef USBCON
     USBDevice.attach();
@@ -38,9 +39,11 @@ int main(void)
     delay(3000); // wait 3 seconds for the serial connection
   #endif
 
-  clock_prescale_set(clock_div_1);
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
+  /*
+    Interrupt and pin mode assignments
+  */
   pinMode(PIN_RTC_MFP, INPUT);
   attachInterrupt(digitalPinToInterrupt(PIN_RTC_MFP), ISR_Rtc_Alarm, FALLING);
 
@@ -55,43 +58,22 @@ int main(void)
  
   // Get controller-model instances
   I2c* I2c = I2c::getInstance();
-  // Accel* Accel = Accel::getInstance();
+  Accel* Accel = Accel::getInstance();
   Rtc* Rtc = Rtc::getInstance();
-  // Eeprom* Eeprom = Eeprom::getInstance();
-  // Display* Display = Display::getInstance();
-  // Ble* Ble = Ble::getInstance();
+  Eeprom* Eeprom = Eeprom::getInstance();
+  Display* Display = Display::getInstance();
+  Ble* Ble = Ble::getInstance();
 
   // Initialize controller-models
   I2c -> init();
   Rtc -> init();
-  // Eeprom -> init();
-  // Display -> init();
-  // Accel -> init();
-  // Ble -> init();
+  Eeprom -> init();
+  Display -> init();
+  Accel -> init();
+  Ble -> init();
 
-  uint8_t alarmType;
-
-  Rtc -> MCP7940 -> clearAlarm(0);
-  Serial.println("Alarm not set. Alarm status is: ");
-  Serial.println(Rtc -> MCP7940 -> getAlarmState(0));
-  Serial.print("Alarm unixtime is: ");
-  Serial.println((Rtc -> MCP7940 -> getAlarm(0, alarmType)).unixtime());
-  Serial.print("Alarm type is: ");
-  Serial.println(alarmType);
-  Serial.print("Current unixtime is: ");
-  Serial.println(Rtc -> getDateTime() -> unixtime());
-
-  Rtc -> setTimer(10);
-  delay(100);
   
-  Serial.print("Alarm is set. Alarm status is: ");
-  Serial.println(Rtc -> MCP7940 -> getAlarmState(0));
-  Serial.print("Alarm unixtime is: ");
-  Serial.println((Rtc -> MCP7940 -> getAlarm(0, alarmType)).unixtime());
-  Serial.print("Alarm type is: ");
-  Serial.println(alarmType);
-
-
+  Rtc -> setTimer(10);
 
   while (1)
   {
@@ -104,9 +86,8 @@ int main(void)
       Serial.println("Alarm triggered.");
     }
 
-    // Accel -> printXYZ();
-    // Rtc -> printTimeToSerial();
-    Serial.print(Rtc -> MCP7940 -> isAlarm(0));
+    Accel -> printXYZ();
+    Rtc -> printTimeToSerial();
 
     delay(1000);
   
@@ -129,24 +110,6 @@ int main(void)
 
 
 
-
-//     /**
-//    * Test #2: Try to read out the time of day and
-//    * print out the results
-//    */
-//     readDateTime(&currentDateTime);
-
-//     Serial.print(currentDateTime.month());
-//     Serial.print("/");
-//     Serial.print(currentDateTime.day());
-//     Serial.print("/");
-//     Serial.print(currentDateTime.year());
-//     Serial.print("\t");
-//     Serial.print(currentDateTime.hour());
-//     Serial.print(":");
-//     Serial.print(currentDateTime.minute());
-//     Serial.print(":");
-//     Serial.println(currentDateTime.second());
 
 //     /**
 //     * Test #3: Try to write and read back some

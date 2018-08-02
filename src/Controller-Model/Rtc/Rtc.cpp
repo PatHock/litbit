@@ -25,7 +25,8 @@ void Rtc::init(void)
     MCP7940 -> deviceStatus();
     MCP7940 -> deviceStart();
     MCP7940 -> adjust();  
-
+    
+    now = getDateTime();
 }
 
 /** 
@@ -37,7 +38,7 @@ void Rtc::init(void)
  */
 bool Rtc::setTimer(uint32_t seconds)
 {
-    MCP7940 -> clearAlarm(0);
+    // MCP7940 -> clearAlarm(0);
     return MCP7940 -> setAlarm(0, ALARM_TYPE_ALL, DateTime(now -> unixtime() + seconds), 1);
 }
 
