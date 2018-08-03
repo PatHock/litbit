@@ -22,21 +22,12 @@ void Eeprom::init(void)
 
     // if EEPROM is empty, take up the first two bytes with the address of the
     // last entry
+
     readLastEntryAddr();
     if(lastEntryAddr == 0)
     {
-        writeLastEntryAddr(0x02);
+        writeLastEntryAddr(0x01);
     }
-
-    log(24597);
-
-
-    // writeData((uint16_t)0x00, Rtc->getDateTime()->unixtime(), (uint16_t)346);
-    // readEntry((uint16_t)0x00);
-    // Serial.print("unix time + step count: ");
-    // Serial.print(unixTime);
-    // Serial.print(", ");
-    // Serial.println(stepCount);
 
 }
 
@@ -48,6 +39,14 @@ void Eeprom::init(void)
 void Eeprom::printEntries(void)
 {
     // read last addr written, loop 
+    readLastEntryAddr();
+    for(int i=0x01; i<lastEntryAddr; i+=6)
+    {
+        readEntry(i+1);
+        Serial.print(unixTime);
+        Serial.print(", ");
+        Serial.println(stepCount);
+    }
 
 }
 
