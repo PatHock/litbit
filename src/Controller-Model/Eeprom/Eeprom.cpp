@@ -16,24 +16,27 @@ Eeprom* Eeprom::_pInstance = NULL;
 void Eeprom::init(void)
 {
     // read lastEntryAddress
-    Rtc* Rtc = Rtc::getInstance();
+    Rtc = Rtc::getInstance();
     unixTime = 0;
     stepCount = 0;
 
-    writeData((uint16_t)0x00, Rtc->getDateTime()->unixtime(), (uint16_t)346);
-    readEntry((uint16_t)0x00);
-    Serial.print("unix time + step count: ");
-    Serial.print(unixTime);
-    Serial.print(", ");
-    Serial.println(stepCount);
+    // if EEPROM is empty, take up the first two bytes with the address of the
+    // last entry
+    readLastEntryAddr();
+    if(lastEntryAddr == 0)
+    {
+        writeLastEntryAddr(0x02);
+    }
 
-    eraseAllEntries();
-    readEntry((uint16_t)0x00);
-    Serial.print("unix time + step count: ");
-    Serial.print(unixTime);
-    Serial.print(", ");
-    Serial.println(stepCount);
+    log(24597);
 
+
+    // writeData((uint16_t)0x00, Rtc->getDateTime()->unixtime(), (uint16_t)346);
+    // readEntry((uint16_t)0x00);
+    // Serial.print("unix time + step count: ");
+    // Serial.print(unixTime);
+    // Serial.print(", ");
+    // Serial.println(stepCount);
 
 }
 
@@ -45,6 +48,7 @@ void Eeprom::init(void)
 void Eeprom::printEntries(void)
 {
     // read last addr written, loop 
+
 }
 
 /** 
@@ -55,16 +59,21 @@ void Eeprom::printEntries(void)
  */
 bool Eeprom::log(uint16_t steps)
 {
-    // get time from rtc
-    // figure out where to write entry to 
-    // write to eeprom
-    // read from eeprom, if it is the same as what was written, return true
-    return 0;
+    // Figure out where the end of the last data entry was
+    readLastEntryAddr();
+
+    // write timestamp + step count to Eeprom
+    writeData(lastEntryAddr+1, Rtc->getDateTime()->unixtime(), steps);
+
+    //update address of last data logged
+    writeLastEntryAddr(lastEntryAddr+6);
+
+    return 1;
 }
 
 /** 
  * @brief  Erases entire Eeprom
- * @note   
+ * @note   Actually only erases the first half but it is fine
  * @retval 
  */
 bool Eeprom::eraseAllEntries(void)
@@ -147,6 +156,43 @@ void Eeprom::writeData(uint16_t dataAddress, uint32_t unixTime, uint16_t stepCou
     Wire.endTransmission(); // Nothing's wrong it's fine
     delay(5);               // Allow time for write to occur - write should not be followed immediately by a read
 }
+
+void Eeprom::readLastEntryAddr(void)
+{
+    Wire.beginTransmission((uint8_t)deviceAddress); // initiate transaction
+
+    Wire.write((uint8_t)0x0);   // First half of 16 - bit address
+    Wire.write((uint8_t)0x0); // second half
+
+    Wire.endTransmission();
+
+    for (int i = 0; i < 2; i++)
+    {
+        Wire.requestFrom((uint8_t)0x50, (uint8_t)1);
+        if (Wire.available())
+        {
+            buffer[i] = (uint8_t)Wire.read();
+        }
+    }
+
+    lastEntryAddr = (uint16_t)buffer[0] << 8 | buffer[1];
+}
+
+void Eeprom::writeLastEntryAddr(uint16_t addr)
+{
+    Wire.beginTransmission((uint8_t)deviceAddress); // initiate transaction
+
+    Wire.write((uint8_t)0x0);   // First half of 16 - bit address
+    Wire.write((uint8_t)0x0); // second half
+
+    // lastEntryAddr resides in the first two bytes
+    Wire.write((uint8_t)(addr << 8)); // first 8 bits
+    Wire.write((uint8_t)(addr & 0xFF)); // second 8 bits
+
+    Wire.endTransmission(); // Nothing's wrong it's fine
+    delay(5);               // Allow time for write to occur
+}
+
 
 
 /**

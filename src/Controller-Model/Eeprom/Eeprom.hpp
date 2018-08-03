@@ -44,6 +44,9 @@ class Eeprom
         volatile uint16_t deviceAddress = 0x50;
         void writeData(uint16_t dataAddress, uint32_t unixTime, uint16_t stepCount);
         uint8_t buffer[6];
+        void readLastEntryAddr(void);
+        void writeLastEntryAddr(uint16_t addr);
+        Rtc* Rtc;
 
         
         
