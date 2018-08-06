@@ -51,7 +51,6 @@ int main(void){
 
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
-
   Serial.begin(SERIAL_SPEED);
 
   // Don't allow startup until serial is available
@@ -64,13 +63,11 @@ int main(void){
     Interrupt and pin mode assignments
   */
   pinMode(PIN_RTC_MFP, INPUT);
-  attachInterrupt(digitalPinToInterrupt(PIN_RTC_MFP), ISR_Rtc_Alarm, FALLING);
-
   pinMode(PIN_ACCEL_INT_2, INPUT);
-  attachPCINT(digitalPinToPCINT(PIN_ACCEL_INT_2), ISR_Adxl, RISING);
-  // attachInterrupt(digitalPinToInterrupt(PIN_ACCEL_INT_2), ISR_Adxl, RISING);
-  
 
+  attachInterrupt(digitalPinToInterrupt(PIN_RTC_MFP), ISR_Rtc_Alarm, FALLING);
+  attachPCINT(digitalPinToPCINT(PIN_ACCEL_INT_2), ISR_Adxl, RISING);  // used PCINT pin
+  
   // Get controller-model instances
   I2c* I2c = I2c::getInstance();
   Accel* Accel = Accel::getInstance();
@@ -87,10 +84,6 @@ int main(void){
   Accel -> init();
   // Ble -> init();
 
-
-
-
-  
   // Rtc -> setTimer(10);
 
   while (1)
@@ -105,24 +98,17 @@ int main(void){
       Serial.println("Alarm triggered.");
     }
 
-    Serial.println(adxlFlag);
-
     if(adxlFlag)
     {
       noInterrupts();
       adxlFlag = 0;
       interrupts();
+      Accel -> adxl -> getInterruptSource();  // needed to clear interrupt on PCINT pin
 
       Serial.println("ADXL interrupt occurred.");
     }
 
-    Serial.println(digitalRead(PIN_ACCEL_INT_2));
-    Serial.println(Accel -> adxl -> getInterruptSource(), BIN);
-
-    
-
-    delay(1000);
-
+    // Serial.println(Accel -> adxl -> getInterruptSource(), BIN);
     // Accel -> printXYZ();
     // Rtc -> printTimeToSerial();
 
