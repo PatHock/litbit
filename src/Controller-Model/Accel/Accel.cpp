@@ -27,15 +27,42 @@ void Accel::init(void)
 
     adxl = new ADXL345();
     adxl -> powerOn();
+    setAccelRange(accelRange);
+
     adxl -> setActivityXYZ(1,1,1);  // Enable activity detection in all axes
     adxl -> setActivityThreshold(75);   // 62.5mg per increment (verify that this is true)
     adxl -> setTimeInactivity(2);   // set inactivity timeout period, in seconds
 
-    // Enable interrups (1 ---> enable)
-    // adxl -> InactivityINT(1);
-    // adxl -> ActivityINT(1);
+    adxl -> setTapThreshold(50);           // 62.5 mg per incrementadxl.setTapThreshold(50);           // 62.5 mg per incrementsetTapThreshold(50);           // 62.5 mg per increment
+    adxl -> setTapDuration(15);            // 625 μs per incrementadxl.setTapDuration(15);            // 625 μs per incrementsetTapDuration(15);            // 625 μs per increment
+    adxl -> setDoubleTapLatency(80);       // 1.25 ms per increment
+    adxl -> setDoubleTapWindow(200);       // 1.25 ms per increment
 
-    setAccelRange(accelRange);
+    adxl -> setTapDetectionOnXYZ(true, true, true);
+
+    
+
+    adxl -> setImportantInterruptMapping(2,2,2,2,2);
+    adxl -> setInterruptLevelBit(0);
+
+    // Enable interrups (1 ---> enable)
+    adxl -> InactivityINT(0);
+    adxl -> ActivityINT(0);
+    adxl -> FreeFallINT(0);
+    adxl -> doubleTapINT(1);
+    adxl -> singleTapINT(0);
+
+    // Serial.println(adxl -> getInterruptSource(), BIN);
+    // Serial.println(adxl -> getInterruptSource(0), BIN);
+    // Serial.println(adxl -> getInterruptSource(1), BIN);
+    // Serial.println(adxl -> getInterruptSource(2), BIN);
+    // Serial.println(adxl -> getInterruptSource(3), BIN);
+    // Serial.println(adxl -> getInterruptSource(4), BIN);
+    // Serial.println(adxl -> getInterruptSource(5), BIN);
+    // Serial.println(adxl -> getInterruptSource(6), BIN);
+
+    
+
 }
 
 /**

@@ -35,5 +35,11 @@ const uint8_t PIN_BLE_RST = 5;
  */
 const uint8_t PIN_RTC_MFP = 1;          // uP pin 21, Arduino/ItsyBitsy pin D1
 
+/**
+ * Display
+ * The Following pins are NC
+ */
+const uint8_t PIN_DISPLAY_DC = 25;
+const uint8_t PIN_DISPLAY_RST = 26;
 
 #endif // PORT_HPP

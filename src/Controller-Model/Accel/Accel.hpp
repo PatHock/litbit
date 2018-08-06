@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <Arduino.h>
 #include <SparkFun_ADXL345.h>
+#include <PinChangeInterrupt.h> // needed for interrupts
 
 #define ADXL_RANGE_2G 2
 #define ADXL_RANGE_4G 4

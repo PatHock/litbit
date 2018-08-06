@@ -12,9 +12,10 @@
 #include <Arduino.h>
 #include <SFE_MicroOLED.h>  // Include the SFE_MicroOLED library
 #include <Wire.h>
+#include "../../Constants/Port.hpp"
 
-#define DISPLAY_DC 1
-#define DISPLAY_RST 9
+// #define DISPLAY_DC 1
+// #define DISPLAY_RST 9
 
 class Display
 {
