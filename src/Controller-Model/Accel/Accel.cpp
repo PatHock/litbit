@@ -28,40 +28,40 @@ void Accel::init(void)
     adxl = new ADXL345();
     adxl -> powerOn();
     setAccelRange(accelRange);
+    adxl -> setRate(50);    // 50 Hz?
 
     adxl -> setActivityXYZ(1,1,1);  // Enable activity detection in all axes
-    adxl -> setActivityThreshold(75);   // 62.5mg per increment (verify that this is true)
+    adxl -> setActivityThreshold(40);   // 62.5mg per increment (verify that this is true)
     adxl -> setTimeInactivity(2);   // set inactivity timeout period, in seconds
 
-    adxl -> setTapThreshold(50);           // 62.5 mg per incrementadxl.setTapThreshold(50);           // 62.5 mg per incrementsetTapThreshold(50);           // 62.5 mg per increment
+    adxl -> setTapThreshold(50);           //  mg per incrementadxl.setTapThreshold(50);           // 62.5 mg per incrementsetTapThreshold(50);           // 62.5 mg per increment
     adxl -> setTapDuration(15);            // 625 μs per incrementadxl.setTapDuration(15);            // 625 μs per incrementsetTapDuration(15);            // 625 μs per increment
     adxl -> setDoubleTapLatency(80);       // 1.25 ms per increment
     adxl -> setDoubleTapWindow(200);       // 1.25 ms per increment
 
     adxl -> setTapDetectionOnXYZ(true, true, true);
 
-    
-
     adxl -> setImportantInterruptMapping(2,2,2,2,2);
-    adxl -> setInterruptLevelBit(0);
+
+    readFromAddress(0x2F);
+    writeToAddress(0x2F, (uint8_t)(adxlReg | 0x2)); //map watermark to INT2 pin
+
+    adxl -> setInterruptLevelBit(0);    // interrupts are active high
+
+    setupFIFO(ADXL_FIFO_MODE_FIFO, (uint8_t)0x1E);  // Set watermark to 30 samples, FIFO mode
 
     // Enable interrups (1 ---> enable)
     adxl -> InactivityINT(0);
-    adxl -> ActivityINT(0);
+    adxl -> ActivityINT(1);
     adxl -> FreeFallINT(0);
-    adxl -> doubleTapINT(1);
+    adxl -> doubleTapINT(0);
     adxl -> singleTapINT(0);
 
-    // Serial.println(adxl -> getInterruptSource(), BIN);
-    // Serial.println(adxl -> getInterruptSource(0), BIN);
-    // Serial.println(adxl -> getInterruptSource(1), BIN);
-    // Serial.println(adxl -> getInterruptSource(2), BIN);
-    // Serial.println(adxl -> getInterruptSource(3), BIN);
-    // Serial.println(adxl -> getInterruptSource(4), BIN);
-    // Serial.println(adxl -> getInterruptSource(5), BIN);
-    // Serial.println(adxl -> getInterruptSource(6), BIN);
+    readFromAddress(0x2E);
+    writeToAddress(0x2E, (uint8_t)(adxlReg | 0x2)); //Enable watermark interrupt
 
-    
+    readFromAddress(0x39);
+    Serial.println(adxlReg, BIN);
 
 }
 
@@ -131,3 +131,37 @@ void Accel::readAccel(int* accelArray)
 {
     adxl->readAccel(accelArray);
 }
+
+void Accel::setupFIFO(uint8_t mode, uint8_t watermark)
+{
+    // Set the mode and watermark
+    // 0x1 << 5: Set trigger bit to 0 (disables trigger interrupt on INT pin 2)
+    writeToAddress((uint8_t)0x38, ((uint8_t)(mode << 5) | (uint8_t)(watermark & 0x1F)) & (uint8_t)(0x20));
+}
+
+void Accel::readFromAddress(uint8_t addr)
+{
+    Wire.beginTransmission((uint8_t)0x53);  // Begin transmission with ADXL
+    Wire.write((uint8_t)addr);  // Slave address to be read from
+    Wire.endTransmission();
+
+    Wire.beginTransmission((uint8_t)0x53);
+    Wire.requestFrom((uint8_t)0x53, 1);  // Request 1 Byte
+
+    if(Wire.available())
+    {
+        adxlReg = Wire.read();
+    }
+
+    Wire.endTransmission();
+}
+
+void Accel::writeToAddress(uint8_t addr, uint8_t data)
+{
+    Wire.beginTransmission((uint8_t)0x53);
+    Wire.write(addr);  // Slave address to be written to
+
+    Wire.write(data);  
+    Wire.endTransmission();
+}
+

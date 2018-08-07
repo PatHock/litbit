@@ -18,6 +18,7 @@
 // FIXME: These flags are spaghet and you should be ashamed
 volatile bool alarmFlag = 0;
 volatile bool adxlFlag = 0;
+volatile byte adxlInterrupts = 0x0;
 
 
 void ISR_Rtc_Alarm() 
@@ -73,15 +74,15 @@ int main(void){
   Accel* Accel = Accel::getInstance();
   Rtc* Rtc = Rtc::getInstance();
   Eeprom* Eeprom = Eeprom::getInstance();
-  Display* Display = Display::getInstance();
+  // Display* Display = Display::getInstance();
   // Ble* Ble = Ble::getInstance();
 
   // Initialize controller-models
   I2c -> init();
   Rtc -> init();
   Eeprom -> init(); // make sure this one is AFTER the RTC
-  Display -> init();   // Display might not work now
   Accel -> init();
+  // Display -> init();   // Display might not work now
   // Ble -> init();
 
   // Rtc -> setTimer(10);
@@ -103,16 +104,34 @@ int main(void){
       noInterrupts();
       adxlFlag = 0;
       interrupts();
-      Accel -> adxl -> getInterruptSource();  // needed to clear interrupt on PCINT pin
+      adxlInterrupts = Accel -> adxl -> getInterruptSource();  // needed to clear interrupt on PCINT pin
+            
+      if((adxlInterrupts >> 7) & 0x01)
+        Serial.print("ADXL Data Ready  ");
+      if((adxlInterrupts >> 6) & 0x01)
+        Serial.print("ADXL Single Tap  ");
+      if((adxlInterrupts >> 5) & 0x01)
+        Serial.print("ADXL Double Tap  ");
+      if((adxlInterrupts >> 4) & 0x01)
+        Serial.print("ADXL Activity  ");
+      if((adxlInterrupts >> 3) & 0x01)
+        Serial.print("ADXL Inactivity  ");
+      if((adxlInterrupts >> 2) & 0x01)
+        Serial.print("ADXL Free Fall  ");
+      if((adxlInterrupts >> 1) & 0x01)
+        Serial.print("ADXL Water Mark  ");
+      if(adxlInterrupts & 0x01)
+        Serial.print("ADXL Overrun  ");
+      
+      Serial.println();
 
-      Serial.println("ADXL interrupt occurred.");
     }
 
     // Serial.println(Accel -> adxl -> getInterruptSource(), BIN);
     // Accel -> printXYZ();
     // Rtc -> printTimeToSerial();
 
-    // delay(1000);
+    delay(100);
   
     
     // // power save

@@ -15,6 +15,7 @@ Display* Display::_pInstance = NULL;
  */
 void Display::init(void)
 {
+    
     MicroOLED oled(PIN_DISPLAY_RST, PIN_DISPLAY_DC);    // Initialize the OLED
     oled.begin();    // Initialize the OLED
     oled.clear(ALL); // Clear the display's internal memory
