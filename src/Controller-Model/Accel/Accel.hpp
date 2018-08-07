@@ -28,7 +28,7 @@ const uint8_t ADXL_FIFO_MODE_FIFO = 0x1;
 const uint8_t ADXL_FIFO_MODE_STREAM = 0x2;
 const uint8_t ADXL_FIFO_MODE_TRIGGER = 0x3;
 
-const uint8_t ADXL_WATERMARK_SIZE = 0x1E;
+const uint8_t ADXL_WATERMARK_SIZE = 0x1C;
 
 class Accel
 {

@@ -128,15 +128,16 @@ int main(void){
       {
         Serial.print("ADXL Water Mark  ");
         Accel -> readFifo();
-        Accel -> readFifo();
+        // Accel -> readFifo();
         // adxl readsamples function here
       }
 
       if(adxlInterrupts & 0x01)
         Serial.print("ADXL Overrun  ");
       
-      adxlInterrupts = Accel -> adxl -> getInterruptSource();  // needed to clear interrupt on PCINT pin
-      Serial.println(adxlInterrupts, BIN);
+      // adxlInterrupts = Accel -> adxl -> getInterruptSource();  // needed to clear interrupt on PCINT pin
+      // Serial.println(adxlInterrupts, BIN);
+      Serial.println();
 
     }
 

@@ -31,7 +31,7 @@ void Accel::init(void)
     adxl -> set_bw(0x8); // 25 Hz?
 
     adxl -> setActivityXYZ(1,1,1);  // Enable activity detection in all axes
-    adxl -> setActivityThreshold(40);   // 62.5mg per increment (verify that this is true)
+    adxl -> setActivityThreshold(20);   // 62.5mg per increment (verify that this is true)
     adxl -> setTimeInactivity(2);   // set inactivity timeout period, in seconds
     adxl -> setTapThreshold(50);           //  mg per incrementadxl.setTapThreshold(50);           // 62.5 mg per incrementsetTapThreshold(50);           // 62.5 mg per increment
     adxl -> setTapDuration(15);            // 625 μs per incrementadxl.setTapDuration(15);            // 625 μs per incrementsetTapDuration(15);            // 625 μs per increment
@@ -196,6 +196,7 @@ void Accel::readFifo(void)
         // Serial.println(sampleMagnitude[i]);
         // delayMicroseconds(5);
     }
+    adxl -> getInterruptSource();   // reading this seems to allow for the water mark interrupt to happen
     // readFromAddress(0x39);
     // Serial.println(adxlReg, BIN);
     // Serial.println(millis());
