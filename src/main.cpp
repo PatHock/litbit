@@ -65,6 +65,12 @@ int main(void){
   pinMode(PIN_RTC_MFP, INPUT);
   pinMode(PIN_ACCEL_INT_2, INPUT);
 
+
+
+  attachPCINT(digitalPinToPCINT(PIN_ACCEL_INT_2), ISR_Adxl, RISING);  // used PCINT pin
+  // Attach interrupts
+  attachInterrupt(digitalPinToInterrupt(PIN_RTC_MFP), ISR_Rtc_Alarm, FALLING);
+
   // Get controller-model instances
   I2c* I2c = I2c::getInstance();
   Accel* Accel = Accel::getInstance();
@@ -81,9 +87,7 @@ int main(void){
   // Display -> init();   // Display might not work now
   // Ble -> init();
   
-  attachPCINT(digitalPinToPCINT(PIN_ACCEL_INT_2), ISR_Adxl, RISING);  // used PCINT pin
-  // Attach interrupts
-  attachInterrupt(digitalPinToInterrupt(PIN_RTC_MFP), ISR_Rtc_Alarm, FALLING);
+
   
 
   // Rtc -> setTimer(10);
@@ -104,6 +108,7 @@ int main(void){
       noInterrupts();
       adxlFlag = 0;
       interrupts();
+
       adxlInterrupts = Accel -> adxl -> getInterruptSource();  // needed to clear interrupt on PCINT pin
             
       if((adxlInterrupts >> 7) & 0x01)
@@ -134,16 +139,14 @@ int main(void){
 
       if(adxlInterrupts & 0x01)
         Serial.print("ADXL Overrun  ");
-      
-      // adxlInterrupts = Accel -> adxl -> getInterruptSource();  // needed to clear interrupt on PCINT pin
-      // Serial.println(adxlInterrupts, BIN);
+
       Serial.println();
 
     }
 
     // Accel -> readFromAddress(0x39);
     // Serial.println(Accel -> adxlReg, BIN);
-    // Serial.println(digitalRead(PIN_ACCEL_INT_2));
+    
 
     // adxlInterrupts = Accel -> adxl -> getInterruptSource();  // needed to clear interrupt on PCINT pin
     // Serial.println(adxlInterrupts, BIN);
@@ -153,7 +156,8 @@ int main(void){
     // Accel -> printXYZ();
     // Rtc -> printTimeToSerial();
 
-    // delay(100);
+    
+    // delay(1000);
 
     // // power save
     // cli();  // Disable global interrupts
