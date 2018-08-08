@@ -20,8 +20,7 @@ volatile bool alarmFlag = 0;
 volatile bool adxlFlag = 0;
 volatile byte adxlInterrupts = 0x0;
 
-
-void ISR_Rtc_Alarm() 
+void ISR_Rtc_Alarm()
 {
   noInterrupts();
   alarmFlag = 1;
@@ -35,27 +34,28 @@ void ISR_Adxl()
   interrupts();
 }
 
-
-int main(void){
+int main(void)
+{
 
   //IMPORTANT - Init code below is necessary for board to function properly
   init();
   clock_prescale_set(clock_div_1);
 
-  #ifdef USBCON
-    USBDevice.attach();
-  #endif
+#ifdef USBCON
+  USBDevice.attach();
+#endif
 
-  #ifdef __AVR_ATmega32U4__
-    delay(3000); // wait 3 seconds for the serial connection
-  #endif
+#ifdef __AVR_ATmega32U4__
+  delay(3000); // wait 3 seconds for the serial connection
+#endif
 
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
   Serial.begin(SERIAL_SPEED);
 
   // Don't allow startup until serial is available
-  while(!Serial) {
+  while (!Serial)
+  {
     ;
   }
 
@@ -65,36 +65,31 @@ int main(void){
   pinMode(PIN_RTC_MFP, INPUT);
   pinMode(PIN_ACCEL_INT_2, INPUT);
 
-
-
-  attachPCINT(digitalPinToPCINT(PIN_ACCEL_INT_2), ISR_Adxl, RISING);  // used PCINT pin
+  attachPCINT(digitalPinToPCINT(PIN_ACCEL_INT_2), ISR_Adxl, RISING); // used PCINT pin
   // Attach interrupts
   attachInterrupt(digitalPinToInterrupt(PIN_RTC_MFP), ISR_Rtc_Alarm, FALLING);
 
   // Get controller-model instances
-  I2c* I2c = I2c::getInstance();
-  Accel* Accel = Accel::getInstance();
-  Rtc* Rtc = Rtc::getInstance();
-  Eeprom* Eeprom = Eeprom::getInstance();
+  I2c *I2c = I2c::getInstance();
+  Accel *Accel = Accel::getInstance();
+  Rtc *Rtc = Rtc::getInstance();
+  Eeprom *Eeprom = Eeprom::getInstance();
   // Display* Display = Display::getInstance();
   // Ble* Ble = Ble::getInstance();
 
   // Initialize controller-models
-  I2c -> init();
-  Rtc -> init();
-  Eeprom -> init(); // make sure this one is AFTER the RTC
-  Accel -> init();
+  I2c->init();
+  Rtc->init();
+  Eeprom->init(); // make sure this one is AFTER the RTC
+  Accel->init();
   // Display -> init();   // Display might not work now
   // Ble -> init();
-  
-
-  
 
   // Rtc -> setTimer(10);
   while (1)
   {
     //FIXME: more flag spaghet below
-    if(alarmFlag)
+    if (alarmFlag)
     {
       noInterrupts();
       alarmFlag = 0;
@@ -103,50 +98,48 @@ int main(void){
       Serial.println("Alarm triggered.");
     }
 
-    if(adxlFlag)
+    if (adxlFlag)
     {
       noInterrupts();
       adxlFlag = 0;
       interrupts();
 
-      adxlInterrupts = Accel -> adxl -> getInterruptSource();  // needed to clear interrupt on PCINT pin
-            
-      if((adxlInterrupts >> 7) & 0x01)
+      adxlInterrupts = Accel->adxl->getInterruptSource(); // needed to clear interrupt on PCINT pin
+
+      if ((adxlInterrupts >> 7) & 0x01)
         Serial.print("ADXL Data Ready  ");
 
-      if((adxlInterrupts >> 6) & 0x01)
+      if ((adxlInterrupts >> 6) & 0x01)
         Serial.print("ADXL Single Tap  ");
 
-      if((adxlInterrupts >> 5) & 0x01)
+      if ((adxlInterrupts >> 5) & 0x01)
         Serial.print("ADXL Double Tap  ");
 
-      if((adxlInterrupts >> 4) & 0x01)
+      if ((adxlInterrupts >> 4) & 0x01)
         Serial.print("ADXL Activity  ");
 
-      if((adxlInterrupts >> 3) & 0x01)
+      if ((adxlInterrupts >> 3) & 0x01)
         Serial.print("ADXL Inactivity  ");
 
-      if((adxlInterrupts >> 2) & 0x01)
+      if ((adxlInterrupts >> 2) & 0x01)
         Serial.print("ADXL Free Fall  ");
 
-      if((adxlInterrupts >> 1) & 0x01)
+      if ((adxlInterrupts >> 1) & 0x01)
       {
         Serial.print("ADXL Water Mark  ");
-        Accel -> readFifo();
+        Accel->readFifo();
         // Accel -> readFifo();
         // adxl readsamples function here
       }
 
-      if(adxlInterrupts & 0x01)
+      if (adxlInterrupts & 0x01)
         Serial.print("ADXL Overrun  ");
 
       Serial.println();
-
     }
 
     // Accel -> readFromAddress(0x39);
     // Serial.println(Accel -> adxlReg, BIN);
-    
 
     // adxlInterrupts = Accel -> adxl -> getInterruptSource();  // needed to clear interrupt on PCINT pin
     // Serial.println(adxlInterrupts, BIN);
@@ -156,7 +149,6 @@ int main(void){
     // Accel -> printXYZ();
     // Rtc -> printTimeToSerial();
 
-    
     // delay(1000);
 
     // // power save
@@ -173,6 +165,3 @@ int main(void){
 
   return 0;
 }
-
-
-
