@@ -71,6 +71,7 @@ void Accel::enableInterrupts(void)
     writeToAddress(ADXL345_INT_ENABLE, 0x2); // Enable watermark interrupt
     adxl->InactivityINT(1);                  // Enable Inactivity Interrupt
     adxl->ActivityINT(1);                    // Enable Activity Interrupt
+    // adxl->doubleTapINT(1);  // Enable Double Tap Int
 }
 
 /** 

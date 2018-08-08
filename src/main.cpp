@@ -54,10 +54,10 @@ int main(void)
   Serial.begin(SERIAL_SPEED);
 
   // Don't allow startup until serial is available
-  while (!Serial)
-  {
-    ;
-  }
+  // while (!Serial)
+  // {
+  //   ;
+  // }
 
   /*
     Pin mode assignments
@@ -123,6 +123,11 @@ int main(void)
       if ((adxlInterrupts >> 5) & 0x01)
         Serial.print("ADXL Double Tap  ");
 
+        // Display ->enable();
+        // Display ->printText((String)*(Accel->getStepCount()));
+        // delay(1000);
+        // Display ->disable();
+
       if ((adxlInterrupts >> 4) & 0x01)
         Serial.print("ADXL Activity  ");
 
@@ -137,6 +142,8 @@ int main(void)
         Serial.print("ADXL Water Mark  ");
         Accel->readFifo();
         Accel->processStepCount();
+        Display ->printText((String)*(Accel->getStepCount()));
+        
       }
 
       if (adxlInterrupts & 0x01)
@@ -158,16 +165,16 @@ int main(void)
 
     // delay(1000);
 
-    // // power save
-    // cli();  // Disable global interrupts
-    // if(true) {
-    //   // power_all_disable;
-    //   sleep_enable();
-    //   sei();  // Enable global interrupts
-    //   sleep_cpu();
-    //   sleep_disable();
-    // }
-    // sei();
+    // power save
+    cli();  // Disable global interrupts
+    if(true) {
+      // power_all_disable;
+      sleep_enable();
+      sei();  // Enable global interrupts
+      sleep_cpu();
+      sleep_disable();
+    }
+    sei();
   }
 
   return 0;

@@ -89,6 +89,13 @@ void Rtc::printTimeToSerial(void)
     // Serial.println("");
 }
 
+// void Rtc::setDisplayTimer(uint32_t seconds)
+// {
+//     displayTimerUnixTime = MCP7940->now().unixtime() + seconds;
+//     if(eepromTimerUnixTime < )
+// }
+
+
 
 // Commented out spaghet below
 

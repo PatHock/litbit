@@ -56,6 +56,8 @@ class Rtc
 
         bool setTimer(uint32_t seconds);
 
+        void setDisplayTimer(uint32_t seconds);
+
 
 
     private:
@@ -66,6 +68,8 @@ class Rtc
         static Rtc* _pInstance;
 
         DateTime* now;
+        uint32_t displayTimerUnixTime;
+        uint32_t eepromTimerUnixTime;
 
 };
 
