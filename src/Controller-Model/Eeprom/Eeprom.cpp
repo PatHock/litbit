@@ -28,12 +28,6 @@ void Eeprom::init(void)
     {
         writeLastEntryAddr(0x01);
     }
-    // writeData(0x20, Rtc->getDateTime()->unixtime(), 4569);
-    // readEntry(0x20);
-    // Serial.print("test: ");
-    // Serial.print(unixTime);
-    // Serial.print(", ");
-    // Serial.println(stepCount);
 
 }
 
@@ -129,7 +123,6 @@ void Eeprom::readEntry(uint16_t address)
 
     unixTime = ((uint32_t)buffer[0] << 24) | ((uint32_t)buffer[1] << 16) | ((uint32_t)buffer[2] << 8) | (uint32_t)buffer[3];
     stepCount = ((uint16_t)buffer[4] << 8) | (uint16_t)buffer[5];
-    // Serial.println(unixTime);   // (DEBUGGING)
 }
 
 /** 

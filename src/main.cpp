@@ -85,11 +85,11 @@ int main(void)
   // Display -> init();   // Display might not work now
   // Ble -> init();
 
-  // Rtc -> printTimeToSerial();
+
   Rtc->setTimer(ALARM_PERIOD_SECONDS);
 
-  Eeprom -> printEntries();   // Check for entries from last time (DEBUGGING)
-  Eeprom -> resetEeprom();  // DEBUGGING
+  Serial.println("Step log:");
+  Eeprom->printEntries(); // Check for entries from last time 
 
   while (1)
   {
@@ -97,16 +97,12 @@ int main(void)
     if (alarmFlag)
     {
       noInterrupts();
-      alarmFlag = 0;  // reset interrupt flag
+      alarmFlag = 0; // reset interrupt flag
       interrupts();
 
       Eeprom->log(*(Accel->getStepCount())); // write step count to EEPROM
-      Accel->resetStepCount();             // reset step count
-      Rtc->setTimer(ALARM_PERIOD_SECONDS); // reset timer
-
-      Serial.println("Alarm triggered, entry written to EEPROM."); // (DEBUGGING)
-      Serial.println("All entries from Eeprom: ");  // (DEBUGGING)
-      Eeprom -> printEntries(); // (DEBUGGING)
+      Accel->resetStepCount();               // reset step count
+      Rtc->setTimer(ALARM_PERIOD_SECONDS);   // reset timer
     }
 
     if (adxlFlag)
@@ -145,7 +141,7 @@ int main(void)
       if (adxlInterrupts & 0x01)
         Serial.print("ADXL Overrun  ");
 
-      Serial.println();
+      // Serial.println();
     }
 
     // Accel -> readFromAddress(0x39);

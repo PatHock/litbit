@@ -32,7 +32,7 @@ const uint8_t ALARM_TYPE_DAYOFWEEK = 3;
 const uint8_t ALARM_TYPE_DATE = 4;
 const uint8_t ALARM_TYPE_ALL = 7;
 
-const uint8_t ALARM_PERIOD_SECONDS = 10;
+const uint8_t ALARM_PERIOD_SECONDS = 900;   // 15 minute time interval
 
 
 class Rtc 
