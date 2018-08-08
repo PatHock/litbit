@@ -103,6 +103,7 @@ int main(void)
       Eeprom->log(*(Accel->getStepCount())); // write step count to EEPROM
       Accel->resetStepCount();               // reset step count
       Rtc->setTimer(ALARM_PERIOD_SECONDS);   // reset timer
+      Serial.println("EEPROM logged 15-minute step total.");
     }
 
     if (adxlFlag)

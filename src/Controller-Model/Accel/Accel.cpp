@@ -28,10 +28,10 @@ void Accel::init(void)
     adxl->set_bw(0x7);             // 12.5 Hz
     adxl->setInterruptLevelBit(0); // interrupts are active high
 
-    adxl->setActivityThreshold(17);   // 62.5mg per increment (verify that this is true)
+    adxl->setActivityThreshold(19);   // 62.5mg per increment (verify that this is true)
     adxl->setActivityXYZ(1, 1, 1);    // Enable activity detection in all axes
     adxl->setTimeInactivity(3);       // set inactivity timeout period, in seconds
-    adxl->setInactivityThreshold(16); // Set inactivity threshold, 62.5mg per increment
+    adxl->setInactivityThreshold(18); // Set inactivity threshold, 62.5mg per increment
     adxl->setInactivityXYZ(1, 1, 1);  // Enable inactivity detection
 
     readFromAddress(ADXL345_POWER_CTL);
