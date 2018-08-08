@@ -19,6 +19,7 @@ void Accel::init(void)
 {
     accelRange = ADXL_RANGE_4G;
     adxl = new ADXL345();
+    stepCount = 0;
     
     // Enable link bit, sample rate 8hz, Measure mode
     writeToAddress(ADXL345_POWER_CTL, ADXL_MEASURE_BIT | ADXL_LINK_BIT | ADXL_WAKEUP_8HZ); 
@@ -119,7 +120,6 @@ void Accel::writeToAddress(uint8_t addr, uint8_t data)
 {
     Wire.beginTransmission((uint8_t)0x53);
     Wire.write(addr); // Slave address to be written to
-
     Wire.write(data);
     Wire.endTransmission();
 }
@@ -173,7 +173,49 @@ void Accel::readFifo(void)
  */
 void Accel::processStepCount(void)
 {
+    // moving average (maybe 2 or 3 samples? increase rate?)
     
+    // Figure out what number represents 1G, and thresholds above and below by 0.05 Gs
+    uint8_t G = 512/accelRange;
+    uint8_t upperThreshold = G + (G>>3);    // thresholds +/- 1/8 of a G
+    uint8_t lowerThreshold = G - (G>>3);
+    uint8_t count = 0;
+    bool isGreaterThanUpper = 0;
+
+    for(int16_t sample : sampleMagnitude)
+    {
+        if(isGreaterThanUpper && (sample < lowerThreshold))
+        {
+            isGreaterThanUpper = false;
+            count++;
+        }
+        else if(!isGreaterThanUpper && (sample > upperThreshold))
+        {
+            isGreaterThanUpper = true;
+            count++;
+        }
+    }
+    
+    stepCount += count/2;
+
+    Serial.println(count/2);
+    Serial.println(stepCount);
+
+    // iterate through 30-sample array
+    // imcrement when signal becomes > high thresh, then when signal becomes < low thresh, and so on
+    // divide answer by 2 - this is the step count fam
+
+    // P Y T H O N C O D E
+    //# Hysteresis threshold detection
+
+    // a = np.zeros_like(smoothed_magnitude)           # array of zeros, same length as smoothed_magnitude
+    // a[ smoothed_magnitude < hyst_thres_neg] = -1    # set values less than negative threshold = -1
+    // a[ smoothed_magnitude > hyst_thres_pos] = +1    # set values greater than positive threshold = 1
+    // indices = np.nonzero(a)                         # find indices where a is nonzero
+    // b = a[indices]                                  # extract the non-zero indices
+
+    // threshold_crossings = [i for i,j in groupby(b) if i!=0]         # remove consecutive duplicate values
+    // print "Number of steps is: " + str(len(threshold_crossings)/2)  # Steps represented by a crossing from one threshold to another and then back again
 }
 
 

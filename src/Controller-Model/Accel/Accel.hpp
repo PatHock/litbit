@@ -78,13 +78,12 @@ class Accel
     uint8_t sampleBuffer[6];
     int16_t rawSample[3];
     int16_t sampleMagnitude[ADXL_WATERMARK_SIZE];
+    uint16_t stepCount;
 
     float normalize(int16_t accelReading);
 
     void setupFIFO(uint8_t mode, uint8_t watermark);
-
     void writeToAddress(uint8_t addr, uint8_t data);
-
     void mapInterrupts(void);
     void enableInterrupts(void);
 };
