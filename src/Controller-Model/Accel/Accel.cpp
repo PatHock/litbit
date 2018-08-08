@@ -58,7 +58,7 @@ void Accel::init(void)
 void Accel::mapInterrupts(void)
 {
     writeToAddress(ADXL345_INT_MAP, 0x2);              //map watermark to INT2 pin
-    adxl->setImportantInterruptMapping(1, 2, 1, 1, 2); // map double tap, inactivity to INT2
+    adxl->setImportantInterruptMapping(1, 2, 1, 1, 1); // map double tap to INT2
 }
 
 /** 
@@ -163,7 +163,6 @@ void Accel::readFifo(void)
     }
     
     adxl->getInterruptSource(); // reading this seems to allow for the water mark interrupt to happen
-    processStepCount();
 }
 
 /** 
@@ -197,25 +196,7 @@ void Accel::processStepCount(void)
     }
     
     stepCount += count/2;
-
-    Serial.println(count/2);
     Serial.println(stepCount);
-
-    // iterate through 30-sample array
-    // imcrement when signal becomes > high thresh, then when signal becomes < low thresh, and so on
-    // divide answer by 2 - this is the step count fam
-
-    // P Y T H O N C O D E
-    //# Hysteresis threshold detection
-
-    // a = np.zeros_like(smoothed_magnitude)           # array of zeros, same length as smoothed_magnitude
-    // a[ smoothed_magnitude < hyst_thres_neg] = -1    # set values less than negative threshold = -1
-    // a[ smoothed_magnitude > hyst_thres_pos] = +1    # set values greater than positive threshold = 1
-    // indices = np.nonzero(a)                         # find indices where a is nonzero
-    // b = a[indices]                                  # extract the non-zero indices
-
-    // threshold_crossings = [i for i,j in groupby(b) if i!=0]         # remove consecutive duplicate values
-    // print "Number of steps is: " + str(len(threshold_crossings)/2)  # Steps represented by a crossing from one threshold to another and then back again
 }
 
 
