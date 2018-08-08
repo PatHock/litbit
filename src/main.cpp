@@ -74,7 +74,7 @@ int main(void)
   Accel *Accel = Accel::getInstance();
   Rtc *Rtc = Rtc::getInstance();
   Eeprom *Eeprom = Eeprom::getInstance();
-  // Display* Display = Display::getInstance();
+  Display* Display = Display::getInstance();
   // Ble* Ble = Ble::getInstance();
 
   // Initialize controller-models
@@ -82,7 +82,7 @@ int main(void)
   Rtc->init();
   Eeprom->init(); // make sure this one is AFTER the RTC
   Accel->init();
-  // Display -> init();   // Display might not work now
+  Display -> init();   // Display might not work now
   // Ble -> init();
 
 
