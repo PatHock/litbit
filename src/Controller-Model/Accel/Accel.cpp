@@ -25,8 +25,11 @@ void Accel::init(void)
 {
     accelRange = ADXL_RANGE_4G;
 
-    adxl = new ADXL345(); //FIXME: Don't call new
-    adxl->powerOn();
+    adxl = new ADXL345();
+    
+    // Enable link bit, sample rate 1hz, Measure mode
+    writeToAddress(ADXL345_POWER_CTL, ADXL_MEASURE_BIT | ADXL_LINK_BIT | ADXL_WAKEUP_1HZ); 
+
     setAccelRange(accelRange);
     adxl->set_bw(0x7);             // 12.5 Hz
     adxl->setInterruptLevelBit(0); // interrupts are active high
@@ -37,7 +40,8 @@ void Accel::init(void)
     adxl->setInactivityThreshold(18); // Set inactivity threshold, 62.5mg per increment
     adxl->setInactivityXYZ(1, 1, 1);  // Enable inactivity detection
 
-    writeToAddress(0x2D, (uint8_t)((0x1 << 5) | 0x1 << 3)); // Enable link bit, Measure bit
+    readFromAddress(ADXL345_POWER_CTL);
+    writeToAddress(ADXL345_POWER_CTL, adxlReg | ADXL_AUTO_ASLEEP_BIT);  // Enable auto sleep for ADXL
 
     // adxl -> setTapThreshold(50);           // mg per incrementadxl.setTapThreshold(50);
     // adxl -> setTapDuration(15);            // 625 μs per incrementadxl.setTapDuration(15);
@@ -45,23 +49,14 @@ void Accel::init(void)
     // adxl -> setDoubleTapWindow(200);       // 1.25 ms per increment
     // adxl -> setTapDetectionOnXYZ(true, true, true);
 
-    // readFromAddress(0x2F);
-    // writeToAddress(0x2F, (uint8_t)(adxlReg | 0x2)); //map watermark to INT2 pin
-    writeToAddress(0x2F, 0x2);                         //map watermark to INT2 pin
-    adxl->setImportantInterruptMapping(1, 2, 1, 2, 2); // map double tap, activity, inactivity to INT2
+    writeToAddress(ADXL345_INT_MAP, 0x2);              //map watermark to INT2 pin
+    adxl->setImportantInterruptMapping(1, 2, 1, 1, 2); // map double tap, inactivity to INT2
 
     setupFIFO(ADXL_FIFO_MODE_FIFO, ADXL_WATERMARK_SIZE); // Set watermark to 30 samples, FIFO mode
 
-    // readFromAddress(0x2E);
-    // writeToAddress(0x2E, 0x2 | adxlReg); //Enable watermark interrupt
-    writeToAddress(0x2E, 0x2); //Enable watermark interrupt
-
-    // Enable Activity and Inactivity, disable others
-    adxl->InactivityINT(1);
-    adxl->ActivityINT(1);
-    // adxl->FreeFallINT(0);
-    // adxl->doubleTapINT(0);
-    // adxl->singleTapINT(0);
+    writeToAddress(ADXL345_INT_ENABLE, 0x2); // Enable watermark interrupt
+    adxl->InactivityINT(1);                  // Enable Inactivity Interrupt
+    adxl->ActivityINT(1);                    // Enable Activity Interrupt
 }
 
 /**
