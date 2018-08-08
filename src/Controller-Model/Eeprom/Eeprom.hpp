@@ -28,8 +28,9 @@ class Eeprom
 
         void printEntries(void);    // print all EEPROM logs to serial
         bool log(uint16_t steps);   // add an entry to the EEPROM
-        bool eraseAllEntries(void); // ERASE EEPROM
+        
         void readEntry(uint16_t address);
+        void resetEeprom(void);
 
     
     private:
@@ -47,6 +48,7 @@ class Eeprom
         void readLastEntryAddr(void);
         void writeLastEntryAddr(uint16_t addr);
         Rtc* Rtc;
+        bool eraseAllEntries(void); // ERASE EEPROM
 
         
         

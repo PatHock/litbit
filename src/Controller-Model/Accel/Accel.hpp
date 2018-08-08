@@ -64,6 +64,8 @@ class Accel
 
     void readFifo(void);
     void processStepCount(void);
+    uint16_t* getStepCount(void);
+    void resetStepCount(void);
     void readFromAddress(uint8_t addr);
     byte adxlReg; // used for reading from i2c
 

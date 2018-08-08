@@ -65,8 +65,8 @@ int main(void)
   pinMode(PIN_RTC_MFP, INPUT);
   pinMode(PIN_ACCEL_INT_2, INPUT);
 
-  attachPCINT(digitalPinToPCINT(PIN_ACCEL_INT_2), ISR_Adxl, RISING); // used PCINT pin
   // Attach interrupts
+  attachPCINT(digitalPinToPCINT(PIN_ACCEL_INT_2), ISR_Adxl, RISING); // used PCINT pin
   attachInterrupt(digitalPinToInterrupt(PIN_RTC_MFP), ISR_Rtc_Alarm, FALLING);
 
   // Get controller-model instances
@@ -85,17 +85,28 @@ int main(void)
   // Display -> init();   // Display might not work now
   // Ble -> init();
 
-  // Rtc -> setTimer(10);
+  // Rtc -> printTimeToSerial();
+  Rtc->setTimer(ALARM_PERIOD_SECONDS);
+
+  Eeprom -> printEntries();   // Check for entries from last time (DEBUGGING)
+  Eeprom -> resetEeprom();  // DEBUGGING
+
   while (1)
   {
     //FIXME: more flag spaghet below
     if (alarmFlag)
     {
       noInterrupts();
-      alarmFlag = 0;
+      alarmFlag = 0;  // reset interrupt flag
       interrupts();
 
-      Serial.println("Alarm triggered.");
+      Eeprom->log(*(Accel->getStepCount())); // write step count to EEPROM
+      Accel->resetStepCount();             // reset step count
+      Rtc->setTimer(ALARM_PERIOD_SECONDS); // reset timer
+
+      Serial.println("Alarm triggered, entry written to EEPROM."); // (DEBUGGING)
+      Serial.println("All entries from Eeprom: ");  // (DEBUGGING)
+      Eeprom -> printEntries(); // (DEBUGGING)
     }
 
     if (adxlFlag)
@@ -128,8 +139,7 @@ int main(void)
       {
         Serial.print("ADXL Water Mark  ");
         Accel->readFifo();
-        // Accel -> readFifo();
-        // adxl readsamples function here
+        Accel->processStepCount();
       }
 
       if (adxlInterrupts & 0x01)

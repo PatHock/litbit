@@ -263,6 +263,26 @@ bool Accel::setAccelRange(uint8_t accelRange)
 }
 
 /** 
+ * @brief  Sets private variable stepCount = 0
+ * @note   
+ * @retval None
+ */
+void Accel::resetStepCount(void)
+{
+    stepCount = 0;
+}
+
+/** 
+ * @brief  returns a pointer to private stepCount
+ * @note   this is probably bad practice or something ?
+ * @retval 
+ */
+uint16_t* Accel::getStepCount(void)
+{
+    return &stepCount;
+}
+
+/** 
  * @brief  
  * @note   
  * @param  *accelArray: 
